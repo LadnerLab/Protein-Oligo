@@ -12,7 +12,9 @@ def read_fasta_lists( file_to_read ):
     names = []
     sequences = []
 
-    for current_line in file_to_read.readlines():
+    in_file = open( file_to_read, 'r' )
+
+    for current_line in in_file.readlines():
 
         current_line = current_line.strip()
         if current_line[ 0 ] == '>':
@@ -22,27 +24,15 @@ def read_fasta_lists( file_to_read ):
         else:
             sequences.append( current_line )
 
+    in_file.close()
     return names[ 0: ], sequences
 
+def write_fastas( names_list, sequence_list, output_name="out.txt" ):
+    out_file = open( output_name, 'w+' )
+    for index in range( len( names_list ) ):
+        out_file.write( '>' + names_list[ index ] + '\n' + 
+                        sequence_list[ index ] + '\n'
+                      )
+    out_file.close()
+        
 
-
-def remove_char_from_string( string, search_char, start, end ):
-    """
-        Removes specified character from string
-        Params:
-          string - the string from which to remove the character
-          search_char - the character to remove from the string
-          start - the beginning index of the string to search
-          end - the last index of the string to search
-        Returns:
-          string without the specified character
-    """
-    output_string = ""
-
-    for current_char in range( start, end ):
-        print( start )
-        print( end )
-        if string[ current_char ] != search_char:
-            output_string += str( string[ current_char ] )
-            
-    return output_string
