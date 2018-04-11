@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-
-def main():
-    in_file = open( "lassa_seq_example.fasta" , 'r' )
-    names, sequences = read_fasta_lists( in_file )
-    print( names )
-    print( sequences )
-    
+   
 def read_fasta_lists( file_to_read ):
     """
        Reads a list of fastas from file_to_read
@@ -32,8 +26,23 @@ def read_fasta_lists( file_to_read ):
 
 
 
+def remove_char_from_string( string, search_char, start, end ):
+    """
+        Removes specified character from string
+        Params:
+          string - the string from which to remove the character
+          search_char - the character to remove from the string
+          start - the beginning index of the string to search
+          end - the last index of the string to search
+        Returns:
+          string without the specified character
+    """
+    output_string = ""
 
-if __name__ == '__main__':
-    main()
-
-    
+    for current_char in range( start, end ):
+        print( start )
+        print( end )
+        if string[ current_char ] != search_char:
+            output_string += str( string[ current_char ] )
+            
+    return output_string
