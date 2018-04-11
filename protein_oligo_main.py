@@ -21,6 +21,7 @@ def main():
    oligo.write_fastas( names, sequences, options.outPut )  
 
 
+
 def add_program_options( option_parser ):
     option_parser.add_option( '-a', '--alignment', help = "Fasta query file of sequence alignment to be used by program. [None, Required]"
                             )
@@ -29,10 +30,6 @@ def add_program_options( option_parser ):
                                        default = 100, \
                                        help = "Amount of characters from each alignment sequence to look at. [100]"
                                      )
-    option_parser.add_option( '-s', '--stepSize', type = 'int', \
-                             default = 100, \
-                             help = "Amount of space to move over after each alignment of sequences. [100]"
-                            )
     option_parser.add_option( '-o', '--outPut', default = "oligo_out.txt", help = "Name of file program output will be written to. [oligo_out.txt]"
                             )
 
@@ -41,5 +38,13 @@ if __name__ == '__main__':
     main()
 
 
+def create_subset_sequence_list( names_list, sequence_list, window_size, delimeter_chars ):
+   subset_names_list = []
+   subset_sequences_list = []
 
+   for current_sequence in range( len( subset_sequences_list ) ):
+      if not subset_sequences_list[ current_sequence ].find( delimeter_chars, 0, window_size ):
+         subset_names_list.append( names_list[ current_sequence ]
+         subset_sequences_list.append( sequence_list[ current_sequence ]
+         
 
