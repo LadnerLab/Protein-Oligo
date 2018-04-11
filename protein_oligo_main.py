@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import protein_oligo_library as oligo
 import sys
 import optparse
@@ -15,6 +16,9 @@ def main():
    if options.alignment is None:
        print( "Fasta alignment file must be provided, exiting." )
        sys.exit( 1 )
+
+   names, sequences = oligo.read_fasta_lists( options.alignment )
+   oligo.write_fastas( names, sequences, options.outPut )  
 
 
 def add_program_options( option_parser ):
