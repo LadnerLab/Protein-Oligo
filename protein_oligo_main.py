@@ -29,6 +29,8 @@ def add_program_options( option_parser ):
                              default = 100, \
                              help = "Amount of space to move over after each alignment of sequences. [100]"
                             )
+    option_parser.add_option( '-o', '--outPut', default = "oligo_out.txt", help = "Name of file program output will be written to. [oligo_out.txt]"
+                            )
 
 
 if __name__ == '__main__':
