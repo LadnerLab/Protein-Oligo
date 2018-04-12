@@ -21,7 +21,7 @@ def main():
 
  
    names, sequences = create_subset_sequence_list( names, sequences, options ) 
-   oligo.write_fastas( names, sequences, options.outPut )
+   oligo.write_fastas( names, sequences, output_name = options.outPut )
 
 
 
@@ -63,9 +63,8 @@ def create_subset_sequence_list( names_list, sequence_list, options ):
    valid_sequences = []
 
    for sequence in range( len( sequence_list ) ):
-      sequence = sequence_list[ sequence ][ 0: options.windowSize ]
-   for sequence in range( len( sequence_list ) ):
-      current_sequence = sequence_list[ sequence ]
+      current_sequence = sequence_list[ sequence ][ 0: options.windowSize ]
+      current_sequence = oligo.remove_char_from_string( current_sequence, '-' )
 
       if is_valid_sequence( current_sequence, options ):
            valid_names.append( names_list[ sequence ] )
