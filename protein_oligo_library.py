@@ -16,22 +16,29 @@ def read_fasta_lists( file_to_read ):
     in_sequence = False 
     sequence = ''
 
-    for current_line in in_file.readlines():
+
+    for current_line in in_file:
+
 
         current_line = current_line.strip()
-        if current_line[ 0 ] == '>':
-            # Add the sequence that was built to the list
-            sequences.append( sequence )
+        if current_line and current_line[ 0 ] == '>':
 
+            # Add the sequence that was built to the list
             current_line = current_line.split( '>' )
             names.append( current_line[ 1 ] )
-            in_sequence = True
+            in_sequence = False
 
         else:
             if in_sequence:
                 sequence += current_line
             else:
-                in_sequence = False
+                if( len( sequence ) == 0 ):
+                    sequence += current_line
+
+                if len( sequence ) > 0:
+                    sequences.append( sequence )
+
+                in_sequence = True
                 sequence = ''
 
     in_file.close()
