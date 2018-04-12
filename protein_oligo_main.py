@@ -89,6 +89,9 @@ def is_valid_sequence( sequence, options ):
 
          
 def append_suffix( string_list, max_length ):
+   """
+       Appends "_0_length of string to each string in a list provided
+   """
    new_list = []
    for current_string in string_list:
       new_list.append( current_string + "_0_" + str( max_length ) )
