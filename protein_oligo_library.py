@@ -79,3 +79,29 @@ def count_char_in_string( test_string, character ):
         if test_string[ index ] == character:
             count += 1
     return count
+
+def min_concurrent_chars( test_string, delimeter_char ):
+    """
+        Finds the minimum number of concurrent non-delimiter char in 
+        test_string
+    
+        Params:
+          test_string- string to search
+          delimeter_char- character to reset the count
+        Returns:
+          integer value, the smallest amount of concurrent characters
+               between delimeter character
+    """
+
+    split_string = test_string.split( delimeter_char )
+    min_length = len( split_string[ 0 ] )
+
+    for substring in split_string[ 1: ]:
+        current_length = len( substring )
+        if current_length > 0 and current_length < min_length:
+            min_length = current_length
+        
+
+    return min_length
+
+        
