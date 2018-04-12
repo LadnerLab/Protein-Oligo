@@ -35,6 +35,10 @@ def read_fasta_lists( file_to_read ):
     return names, sequences
  
 def write_fastas( names_list, sequence_list, output_name="out.txt" ):
+    """
+        Writes a fast file from a list of names an dsequences to output file provided
+
+    """
     out_file = open( output_name, 'w+' )
     for index in range( len( names_list ) ):
         out_file.write( '>' + names_list[ index ] + '\n' + 
@@ -44,6 +48,9 @@ def write_fastas( names_list, sequence_list, output_name="out.txt" ):
         
 
 def char_in_string( test_string, character ):
+    """
+        Checks if a character is found within a given string
+    """
     for index in range( len( test_string ) ):
         if test_string[ index ] == character:
             return True
