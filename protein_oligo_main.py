@@ -19,8 +19,10 @@ def main():
 
    names, sequences = oligo.read_fasta_lists( options.alignment )
 
+ 
    names, sequences = create_subset_sequence_list( names, sequences, options ) 
    oligo.write_fastas( names, sequences, options.outPut )
+
 
 
 
@@ -67,9 +69,11 @@ def create_subset_sequence_list( names_list, sequence_list, options ):
 
       if is_valid_sequence( current_sequence, options ):
            valid_names.append( names_list[ sequence ] )
-           valid_sequences.append( current_sequence )
+           valid_sequences.append( current_sequence[ 0: options.windowSize ] )
 
-   return valid_names, valid_sequences
+   names_list = append_suffix( valid_names, options.windowSize )
+
+   return names_list, valid_sequences
 
 def is_valid_sequence( sequence, options ):
    """
@@ -77,14 +81,19 @@ def is_valid_sequence( sequence, options ):
        A valid sequence is defined by not having any 'X' characters,
            and not violating the parameters of either options.outPut or options.percentValid
    """
-    if not oligo.char_in_string( sequence, 'X' ):
-        if options.minLength is None:
-            return oligo.percentage_of_char_in_string( sequence, '-' ) > options.percentValid
-        else:
-            return ( oligo.min_concurrent_chars( sequence, '-' ) <= options.minLength )
-    return False
+   if not oligo.char_in_string( sequence, 'X' ):
+       if options.minLength is None:
+           return oligo.percentage_of_char_in_string( sequence, '-' ) < options.percentValid
+       else:
+           return ( oligo.min_concurrent_chars( sequence, '-' ) >= options.minLength )
+   return False
 
          
+def append_suffix( string_list, max_length ):
+   new_list = []
+   for current_string in string_list:
+      new_list.append( current_string + "_0_" + str( max_length ) )
+   return new_list
 
 if __name__ == '__main__':
            main()
