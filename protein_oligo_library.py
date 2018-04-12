@@ -13,16 +13,26 @@ def read_fasta_lists( file_to_read ):
     sequences = []
 
     in_file = open( file_to_read, 'r' )
+    in_sequence = False 
+    sequence = ''
 
     for current_line in in_file.readlines():
 
         current_line = current_line.strip()
         if current_line[ 0 ] == '>':
+            # Add the sequence that was built to the list
+            sequences.append( sequence )
+
             current_line = current_line.split( '>' )
             names.append( current_line[ 1 ] )
+            in_sequence = True
 
         else:
-            sequences.append( current_line )
+            if in_sequence:
+                sequence += current_line
+            else:
+                in_sequence = False
+                sequence = ''
 
     in_file.close()
     return names[ 0: ], sequences
