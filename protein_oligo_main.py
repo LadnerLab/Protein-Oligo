@@ -21,9 +21,13 @@ def main():
 
    # Loop through each sequence, stepping over step_size amount after getting to window size
 
+   # split each sequence up into window_size pieces, moving over step_size
+
    names, sequences = oligo.create_list_of_uniques( names, sequences )
    names, sequences = create_subset_sequence_list( names, sequences, options, 0, options.windowSize ) 
    oligo.write_fastas( names, sequences, output_name = options.outPut )
+
+
 
 
 
@@ -77,7 +81,7 @@ def create_subset_sequence_list( names_list, sequence_list, options, start, end 
            current_sequence = oligo.remove_char_from_string( current_sequence, '-' )
            valid_sequences.append( current_sequence[ start : end ] )
 
-   names_list = append_suffix( valid_names, end )
+   names_list = append_suffix( valid_names, start, end )
 
    return names_list, valid_sequences
 
@@ -95,14 +99,20 @@ def is_valid_sequence( sequence, options ):
    return False
 
          
-def append_suffix( string_list, max_length ):
+def append_suffix( string, start, end ):
    """
-       Appends "_0_length of string to each string in a list provided
+       Appends _start_end to a string
    """
-   new_list = []
-   for current_string in string_list:
-      new_list.append( current_string + "_0_" + str( max_length ) )
-   return new_list
+   return "%s_%s_%s" % ( string, str( start ), str( end ) ) 
+
+
+# In progress
+def subset_lists( name, sequence, name_arr, seq_arr, options, start, end, options ):
+   seq_arr.append( sequence[ start : end ] ) 
+   name_arr.append( append_suffix( name, start, end ) )
+
+   subset_lists( name, sequence, name_arr, seq_arr, options, end + options.stepSize + 1, window_size, options )
+   
 
 if __name__ == '__main__':
            main()
