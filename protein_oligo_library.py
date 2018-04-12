@@ -41,3 +41,22 @@ def char_in_string( test_string, character ):
         if test_string[ index ] == character:
             return true
     return false
+
+def percentage_of_char_in_string( test_string, character ):
+    """
+        Calculates what percent of a given test_string is given character
+    
+        Params:
+           test_string- string to test for character
+           character- character to test for in string
+       Returns:
+           floating point value percent of the string that
+           is character
+    """
+    length = len( test_string )
+    char_count = 0.0
+
+    for index in range( length ):
+        if test_string[ index ] == character:
+            char_count += 1
+    return char_count / length
