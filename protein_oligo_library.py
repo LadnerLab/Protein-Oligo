@@ -124,3 +124,28 @@ def remove_char_from_string( test_string, to_remove ):
         if test_string[ index ] != to_remove:
             output += test_string[ index ]
     return output
+
+
+def create_list_of_uniques( names, sequences ):
+    """
+       Removes duplicates from a list
+       Params:
+          names- names of the sequences
+       sequences:
+          a list of sequences who may or may not be unique
+    """
+    return_names = []
+    return_sequences = []
+
+    unique_values = set()
+
+    for index in range( len( sequences ) ):
+        starting_length = len( unique_values )
+        unique_values.add( sequences[ index ] )
+
+        if len( unique_values ) > starting_length:
+            return_names.append( names[ index ] )
+            return_sequences.append( sequences[ index ] )
+    return return_names, return_sequences
+            
+    
