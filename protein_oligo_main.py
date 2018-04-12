@@ -19,8 +19,10 @@ def main():
 
    names, sequences = oligo.read_fasta_lists( options.alignment )
 
- 
-   names, sequences = create_subset_sequence_list( names, sequences, options ) 
+   # Loop through each sequence, stepping over step_size amount after getting to window size
+
+   names, sequences = oligo.create_list_of_uniques( names, sequences )
+   names, sequences = create_subset_sequence_list( names, sequences, options, 0, options.windowSize ) 
    oligo.write_fastas( names, sequences, output_name = options.outPut )
 
 
@@ -54,7 +56,7 @@ def add_program_options( option_parser ):
       )
       )
     
-def create_subset_sequence_list( names_list, sequence_list, options ):
+def create_subset_sequence_list( names_list, sequence_list, options, start, end ):
    """
        Creates a sequence list of valid sequences.
        A valid sequence is defined by not having any 'X' characters,
@@ -68,14 +70,14 @@ def create_subset_sequence_list( names_list, sequence_list, options ):
    valid_sequences = []
 
    for sequence in range( len( sequence_list ) ):
-      current_sequence = sequence_list[ sequence ][ 0: options.windowSize ]
+      current_sequence = sequence_list[ sequence ][ start : end ]
 
       if is_valid_sequence( current_sequence, options ):
            valid_names.append( names_list[ sequence ] )
            current_sequence = oligo.remove_char_from_string( current_sequence, '-' )
-           valid_sequences.append( current_sequence[ 0: options.windowSize ] )
+           valid_sequences.append( current_sequence[ start : end ] )
 
-   names_list = append_suffix( valid_names, options.windowSize )
+   names_list = append_suffix( valid_names, end )
 
    return names_list, valid_sequences
 
