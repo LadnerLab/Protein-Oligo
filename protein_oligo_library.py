@@ -39,8 +39,8 @@ def write_fastas( names_list, sequence_list, output_name="out.txt" ):
 def char_in_string( test_string, character ):
     for index in range( len( test_string ) ):
         if test_string[ index ] == character:
-            return true
-    return false
+            return True
+    return False
 
 def percentage_of_char_in_string( test_string, character ):
     """
@@ -100,8 +100,9 @@ def min_concurrent_chars( test_string, delimeter_char ):
         current_length = len( substring )
         if current_length > 0 and current_length < min_length:
             min_length = current_length
-        
 
     return min_length
 
+
         
+
