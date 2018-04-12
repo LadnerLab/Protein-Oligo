@@ -60,3 +60,22 @@ def percentage_of_char_in_string( test_string, character ):
         if test_string[ index ] == character:
             char_count += 1
     return char_count / length
+
+def count_char_in_string( test_string, character ):
+    """
+        Counts how much of a certain character are in test_string
+
+        Params:
+            test_string- string to count
+            character- character to count in string
+        Returns:
+            integer value representing the number of character 
+                were found in test_string
+    """
+    length = len( test_string )
+    count = 0
+
+    for index in range( length ):
+        if test_string[ index ] == character:
+            count += 1
+    return count
