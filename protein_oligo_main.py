@@ -48,6 +48,11 @@ def add_program_options( option_parser ):
       "characters less than this parameter will not be included in program output. [None, Required] "
    )
    )
+
+   option_parser.add_option( '-s', '--stepSize', type = 'int', help = (
+      "Step size to move over after each subset of windowSize characters has been read"
+      )
+      )
     
 def create_subset_sequence_list( names_list, sequence_list, options ):
    """
