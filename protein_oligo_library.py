@@ -9,41 +9,31 @@ def read_fasta_lists( file_to_read ):
         sequences- a list of the sequences found in the fasta file
     """
 
+
+    file_in = open( file_to_read, 'r' )
+    count = 0
+
     names = []
     sequences = []
+    current_sequence = ''
 
-    in_file = open( file_to_read, 'r' )
-    in_sequence = False 
-    sequence = ''
-
-
-    for current_line in in_file:
-
-
-        current_line = current_line.strip()
-        if current_line and current_line[ 0 ] == '>':
-
-            # Add the sequence that was built to the list
-            current_line = current_line.split( '>' )
-            names.append( current_line[ 1 ] )
-            in_sequence = False
+    for line in file_in:
+        line = line.strip()
+        if line and line[ 0 ] == '>':
+            count += 1
+            names.append( line[ 1: ] )
+            if count > 1:
+                sequences.append( current_sequence )
+            current_sequence = ''
 
         else:
-            if in_sequence:
-                sequence += current_line
-            else:
-                if( len( sequence ) == 0 ):
-                    sequence += current_line
+            current_sequence += line
 
-                if len( sequence ) > 0:
-                    sequences.append( sequence )
+    sequences.append( current_sequence )
+    file_in.close()
 
-                in_sequence = True
-                sequence = ''
-
-    in_file.close()
-    return names[ 0: ], sequences
-
+    return names, sequences
+ 
 def write_fastas( names_list, sequence_list, output_name="out.txt" ):
     out_file = open( output_name, 'w+' )
     for index in range( len( names_list ) ):
@@ -121,5 +111,9 @@ def min_concurrent_chars( test_string, delimeter_char ):
     return min_length
 
 
-        
-
+def remove_char_from_string( test_string, to_remove ):
+    output = ""
+    for index in range( len( test_string ) ):
+        if test_string[ index ] != to_remove:
+            output += test_string[ index ]
+    return output
