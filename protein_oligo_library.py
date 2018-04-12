@@ -36,3 +36,8 @@ def write_fastas( names_list, sequence_list, output_name="out.txt" ):
     out_file.close()
         
 
+def char_in_string( test_string, character ):
+    for index in range( len( test_string ) ):
+        if test_string[ index ] == character:
+            return true
+    return false
