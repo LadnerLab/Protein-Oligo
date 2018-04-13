@@ -133,7 +133,7 @@ def subset_lists_helper( name, sequence, name_arr, seq_arr, options, start, end 
        seq_arr.append( sequence[ start : end ] ) 
        name_arr.append( append_suffix( name, start + 1, end ) )
 
-       subset_lists_helper( name, sequence, name_arr, seq_arr, options, start + options.stepSize, start + options.windowSize )
+       subset_lists_helper( name, sequence, name_arr, seq_arr, options, start + options.stepSize, start + options.stepSize + options.windowSize )
    return name_arr, seq_arr
    
 
