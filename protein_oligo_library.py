@@ -147,5 +147,80 @@ def create_list_of_uniques( names, sequences ):
             return_names.append( names[ index ] )
             return_sequences.append( sequences[ index ] )
     return return_names, return_sequences
+
+def create_valid_sequence_list( names_list, sequence_list, options, start, end ):
+   """
+       Creates a sequence list of valid sequences.
+       A valid sequence is defined by not having any 'X' characters,
+       and not violating the parameters of either options.outPut or options.percentValid
+       
+       Returns:
+           a list of names of those sequences that were valid, with the new bounds appended to the name
+           a list of the sequences that were found valid
+   """
+   valid_names = []
+   valid_sequences = []
+
+   for sequence in range( len( sequence_list ) ):
+      current_sequence = sequence_list[ sequence ][ start : end ]
+
+      if is_valid_sequence( current_sequence, options ):
+           valid_names.append( names_list[ sequence ] )
+           current_sequence = oligo.remove_char_from_string( current_sequence, '-' )
+           valid_sequences.append( current_sequence[ start : end ] )
+
+   names_list = append_suffix( valid_names, start, end )
+
+   return names_list, valid_sequences
+
+def is_valid_sequence( sequence, options ):
+   """
+       Determines whether a given sequence is valid 
+       A valid sequence is defined by not having any 'X' characters,
+           and not violating the parameters of either options.outPut or options.percentValid
+   """
+   if not oligo.char_in_string( sequence, 'X' ):
+       if options.minLength is None:
+           return oligo.percentage_of_char_in_string( sequence, '-' ) < ( 100 - options.percentValid )
+       else:
+           return ( oligo.min_concurrent_chars( sequence, '-' ) >= options.minLength )
+   return False
+
+         
+def append_suffix( string, start, end ):
+   """
+       Appends _start_end to a string
+   """
+   return "%s_%s_%s" % ( string, str( start ), str( end ) ) 
+
+
+def subset_lists( name, sequence, options ):
+   """
+       Creates a list of subsets of windowSize size in intervals of stepSize
+       Note: Uses recursive subset_lists_helper for operations
+   
+       Params:
+            name: String name of sequence to be split up
+            sequence: String sequence to be split up into a list
+       Returns:
+            a list of the split up names, with a suffix applied, and a list of the segments 
+            of the list, as specified
+   """
+   new_names = []
+   new_seqs = []
+   return subset_lists_helper( name, sequence, new_names, new_seqs, options, 0, options.windowSize )
+
+def subset_lists_helper( name, sequence, name_arr, seq_arr, options, start, end ):
+   if start < len( sequence ):
+       if end > len( sequence ):
+          end = len( sequence )
+       seq_arr.append( sequence[ start : end ] ) 
+       name_arr.append( append_suffix( name, start + 1, end ) )
+
+       subset_lists_helper( name, sequence, name_arr, seq_arr, options, start + options.stepSize, start + options.stepSize + options.windowSize )
+   return name_arr, seq_arr
+   
+
+
             
     
