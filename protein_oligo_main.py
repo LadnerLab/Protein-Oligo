@@ -128,6 +128,8 @@ def subset_lists( name, sequence, options ):
 
 def subset_lists_helper( name, sequence, name_arr, seq_arr, options, start, end ):
    if start < len( sequence ):
+       if end > len( sequence ):
+          end = len( sequence )
        seq_arr.append( sequence[ start : end ] ) 
        name_arr.append( append_suffix( name, start + 1, end ) )
 
