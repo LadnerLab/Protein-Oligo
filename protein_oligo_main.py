@@ -24,7 +24,11 @@ def main():
    # split each sequence up into window_size pieces, moving over step_size
 
    names, sequences = oligo.create_list_of_uniques( names, sequences )
-   names, sequences = create_subset_sequence_list( names, sequences, options, 0, options.windowSize ) 
+   print( sequences[ 0 ] )
+   print( subset_lists( names[ 0 ], sequences[ 0 ], options ) ) 
+   sys.exit(1)
+
+   names, sequences = create_valid_sequence_list( names, sequences, options, 0, options.windowSize ) 
    oligo.write_fastas( names, sequences, output_name = options.outPut )
 
 
@@ -60,7 +64,7 @@ def add_program_options( option_parser ):
       )
       )
     
-def create_subset_sequence_list( names_list, sequence_list, options, start, end ):
+def create_valid_sequence_list( names_list, sequence_list, options, start, end ):
    """
        Creates a sequence list of valid sequences.
        A valid sequence is defined by not having any 'X' characters,
@@ -106,12 +110,29 @@ def append_suffix( string, start, end ):
    return "%s_%s_%s" % ( string, str( start ), str( end ) ) 
 
 
-# In progress
-def subset_lists( name, sequence, name_arr, seq_arr, options, start, end, options ):
-   seq_arr.append( sequence[ start : end ] ) 
-   name_arr.append( append_suffix( name, start, end ) )
+def subset_lists( name, sequence, options ):
+   """
+       Creates a list of subsets of windowSize size in intervals of stepSize
+       Note: Uses recursive subset_lists_helper for operations
+   
+       Params:
+            name: String name of sequence to be split up
+            sequence: String sequence to be split up into a list
+       Returns:
+            a list of the split up names, with a suffix applied, and a list of the segments 
+            of the list, as specified
+   """
+   new_names = []
+   new_seqs = []
+   return subset_lists_helper( name, sequence, new_names, new_seqs, options, 0, options.windowSize )
 
-   subset_lists( name, sequence, name_arr, seq_arr, options, end + options.stepSize + 1, window_size, options )
+def subset_lists_helper( name, sequence, name_arr, seq_arr, options, start, end ):
+   if start < len( sequence ):
+       seq_arr.append( sequence[ start : end ] ) 
+       name_arr.append( append_suffix( name, start + 1, end ) )
+
+       subset_lists_helper( name, sequence, name_arr, seq_arr, options, start + options.stepSize, start + options.windowSize )
+   return name_arr, seq_arr
    
 
 if __name__ == '__main__':
