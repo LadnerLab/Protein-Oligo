@@ -9,7 +9,6 @@ def read_fasta_lists( file_to_read ):
         sequences- a list of the sequences found in the fasta file
     """
 
-
     file_in = open( file_to_read, 'r' )
     count = 0
 
@@ -36,7 +35,7 @@ def read_fasta_lists( file_to_read ):
  
 def write_fastas( names_list, sequence_list, output_name="out.txt" ):
     """
-        Writes a fast file from a list of names an dsequences to output file provided
+        Writes a fasta file from a list of names and sequences to output file provided
 
     """
     out_file = open( output_name, 'w+' )
@@ -119,6 +118,12 @@ def min_concurrent_chars( test_string, delimeter_char ):
 
 
 def remove_char_from_string( test_string, to_remove ):
+    """
+        Removes character to_remove from string test_string
+        Note: Case sensitive method, 'a' != 'A'
+        Returns:
+           test_string, minus any instance of to_remove character
+    """
     output = ""
     for index in range( len( test_string ) ):
         if test_string[ index ] != to_remove:
@@ -148,11 +153,11 @@ def create_list_of_uniques( names, sequences ):
             return_sequences.append( sequences[ index ] )
     return return_names, return_sequences
 
-def create_valid_sequence_list( names_list, sequence_list, options, start, end ):
+def create_valid_sequence_list( names_list, sequence_list, min_length, percent_valid, start, end ):
    """
        Creates a sequence list of valid sequences.
        A valid sequence is defined by not having any 'X' characters,
-       and not violating the parameters of either options.outPut or options.percentValid
+       and not violating the parameters of either min_length or percent_valid 
        
        Returns:
            a list of names of those sequences that were valid, with the new bounds appended to the name
@@ -164,26 +169,26 @@ def create_valid_sequence_list( names_list, sequence_list, options, start, end )
    for sequence in range( len( sequence_list ) ):
       current_sequence = sequence_list[ sequence ][ start : end ]
 
-      if is_valid_sequence( current_sequence, options ):
+      if is_valid_sequence( current_sequence, min_length, percent_valid ):
            valid_names.append( names_list[ sequence ] )
-           current_sequence = oligo.remove_char_from_string( current_sequence, '-' )
+           current_sequence = remove_char_from_string( current_sequence, '-' )
            valid_sequences.append( current_sequence[ start : end ] )
 
    names_list = append_suffix( valid_names, start, end )
 
    return names_list, valid_sequences
 
-def is_valid_sequence( sequence, options ):
+def is_valid_sequence( sequence, min_length, percent_valid ):
    """
        Determines whether a given sequence is valid 
        A valid sequence is defined by not having any 'X' characters,
-           and not violating the parameters of either options.outPut or options.percentValid
+           and not violating the parameters of either min_length or percent_valid 
    """
-   if not oligo.char_in_string( sequence, 'X' ):
-       if options.minLength is None:
-           return oligo.percentage_of_char_in_string( sequence, '-' ) < ( 100 - options.percentValid )
+   if not char_in_string( sequence, 'X' ):
+       if min_length is None:
+           return percentage_of_char_in_string( sequence, '-' ) < ( 100 - percent_valid )
        else:
-           return ( oligo.min_concurrent_chars( sequence, '-' ) >= options.minLength )
+           return ( min_concurrent_chars( sequence, '-' ) >= min_length )
    return False
 
          
@@ -194,7 +199,22 @@ def append_suffix( string, start, end ):
    return "%s_%s_%s" % ( string, str( start ), str( end ) ) 
 
 
-def subset_lists( name, sequence, options ):
+def subset_lists_iter( name, sequence, window_size, step_size ):
+    new_names = []
+    new_seqs = []
+
+    start = 0
+    end = window_size
+    while end < len( sequence ):
+       new_seqs.append( sequence[ start : end ] )
+       new_names.append( append_suffix( name, start + 1, end ) )
+
+       start += step_size
+       end = start + step_size + window_size
+
+    return new_names, new_seqs
+
+def subset_lists( name, sequence, window_size, step_size ):
    """
        Creates a list of subsets of windowSize size in intervals of stepSize
        Note: Uses recursive subset_lists_helper for operations
@@ -208,17 +228,20 @@ def subset_lists( name, sequence, options ):
    """
    new_names = []
    new_seqs = []
-   return subset_lists_helper( name, sequence, new_names, new_seqs, options, 0, options.windowSize )
+   return subset_lists_helper( name, sequence, new_names, new_seqs, window_size, step_size, 0, window_size )
 
-def subset_lists_helper( name, sequence, name_arr, seq_arr, options, start, end ):
-   if start < len( sequence ):
-       if end > len( sequence ):
-          end = len( sequence )
+def subset_lists_helper( name, sequence, name_arr, seq_arr, window_size, step_size, start, end ):
+    """
+        Recursive helper method called by subset_lists
+    """
+    if start + window_size < len( sequence ):
+       if len( sequence[ start: end ] ) == 1:
+           return
        seq_arr.append( sequence[ start : end ] ) 
        name_arr.append( append_suffix( name, start + 1, end ) )
 
-       subset_lists_helper( name, sequence, name_arr, seq_arr, options, start + options.stepSize, start + options.stepSize + options.windowSize )
-   return name_arr, seq_arr
+       subset_lists_helper( name, sequence, name_arr, seq_arr, window_size, step_size, start + step_size, start + step_size + window_size )
+    return name_arr, seq_arr
    
 
 
