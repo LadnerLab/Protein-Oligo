@@ -144,14 +144,15 @@ def create_list_of_uniques( names, sequences ):
 
     unique_values = set()
 
-    print( sequence )
     for index in range( len( sequences ) ):
+        
         starting_length = len( unique_values )
         unique_values.add( sequences[ index ] )
 
         if len( unique_values ) > starting_length:
             return_names.append( names[ index ] )
             return_sequences.append( sequences[ index ] )
+
     return return_names, return_sequences
 
 def create_valid_sequence_list( names_list, sequence_list, min_length, percent_valid ):
@@ -173,7 +174,7 @@ def create_valid_sequence_list( names_list, sequence_list, min_length, percent_v
       if is_valid_sequence( current_sequence, min_length, percent_valid ):
            valid_names.append( names_list[ sequence ] )
            current_sequence = remove_char_from_string( current_sequence, '-' )
-           valid_sequences.append( current_sequence[ sequence ] )
+           valid_sequences.append( current_sequence )
            valid_names.append( names_list[ sequence ] )
 
    return valid_names, valid_sequences
