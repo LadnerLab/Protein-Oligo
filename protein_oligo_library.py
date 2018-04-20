@@ -172,7 +172,6 @@ def create_valid_sequence_list( names_list, sequence_list, min_length, percent_v
       current_sequence = sequence_list[ sequence ]
 
       if is_valid_sequence( current_sequence, min_length, percent_valid ):
-           valid_names.append( names_list[ sequence ] )
            current_sequence = remove_char_from_string( current_sequence, '-' )
            valid_sequences.append( current_sequence )
            valid_names.append( names_list[ sequence ] )
@@ -212,7 +211,7 @@ def subset_lists_iter( name, sequence, window_size, step_size ):
        new_names.append( append_suffix( name, start + 1, end ) )
 
        start += step_size
-       end = start + step_size + window_size - 1
+       end = start + window_size 
 
     return new_names, new_seqs
 
