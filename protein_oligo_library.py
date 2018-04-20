@@ -144,6 +144,7 @@ def create_list_of_uniques( names, sequences ):
 
     unique_values = set()
 
+    print( sequence )
     for index in range( len( sequences ) ):
         starting_length = len( unique_values )
         unique_values.add( sequences[ index ] )
