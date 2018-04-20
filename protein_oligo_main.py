@@ -19,13 +19,28 @@ def main():
 
    names, sequences = oligo.read_fasta_lists( options.alignment )
 
+   subset_names = []
+   subset_sequences = []
 
    for index in range( len( sequences ) ):
+      
       current_name, current_sequence = oligo.subset_lists_iter( names[ index ], sequences[ index ], options.windowSize, options.stepSize ) 
-      current_name, current_sequence = oligo.create_list_of_uniques( names, sequences )
       current_name, current_sequence = oligo.create_valid_sequence_list( current_name, current_sequence, options.minLength, options.percentValid )
 
-      oligo.write_fastas( current_name, current_sequence, output_name = options.outPut )
+      subset_names.append( current_name )
+      subset_sequences.append( current_sequence )
+
+   output_names = []
+   output_sequences = []
+
+   # Generate a list of unique sequences for output
+   for item in range( len( subset_sequences ) ):   
+      unique_names, unique_sequences = oligo.create_list_of_uniques( subset_names[ item ], subset_sequences[ item ] )
+      for index in range( len( unique_sequences ) ):
+         output_names.append( unique_names[ index ] )
+         output_sequences.append( unique_sequences[ index ] )
+
+   oligo.write_fastas( output_names, output_sequences, output_name = options.outPut )
 
 
 
