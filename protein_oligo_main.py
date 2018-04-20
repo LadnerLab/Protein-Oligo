@@ -21,14 +21,11 @@ def main():
 
 
    for index in range( len( sequences ) ):
-      current_sequence = oligo.subset_lists_iter( names[ index ], sequences[ index ], options.windowSize, options.stepSize ) 
-      names, sequences = oligo.create_list_of_uniques( names, sequences )
+      current_name, current_sequence = oligo.subset_lists_iter( names[ index ], sequences[ index ], options.windowSize, options.stepSize ) 
+      current_name, current_sequence = oligo.create_list_of_uniques( names, sequences )
+      current_name, current_sequence = oligo.create_valid_sequence_list( current_name, current_sequence, options.minLength, options.percentValid )
 
-
-      names, sequences = oligo.create_valid_sequence_list( names, sequences, options.minLength, options.percentValid, 0, options.windowSize ) 
-   print( len( names ) )
-   print( len( sequences ) )
-   # oligo.write_fastas( names, sequences, output_name = options.outPut )
+      oligo.write_fastas( current_name, current_sequence, output_name = options.outPut )
 
 
 
