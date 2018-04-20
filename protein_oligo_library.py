@@ -153,7 +153,7 @@ def create_list_of_uniques( names, sequences ):
             return_sequences.append( sequences[ index ] )
     return return_names, return_sequences
 
-def create_valid_sequence_list( names_list, sequence_list, min_length, percent_valid, start, end ):
+def create_valid_sequence_list( names_list, sequence_list, min_length, percent_valid ):
    """
        Creates a sequence list of valid sequences.
        A valid sequence is defined by not having any 'X' characters,
@@ -167,16 +167,15 @@ def create_valid_sequence_list( names_list, sequence_list, min_length, percent_v
    valid_sequences = []
 
    for sequence in range( len( sequence_list ) ):
-      current_sequence = sequence_list[ sequence ][ start : end ]
+      current_sequence = sequence_list[ sequence ]
 
       if is_valid_sequence( current_sequence, min_length, percent_valid ):
            valid_names.append( names_list[ sequence ] )
            current_sequence = remove_char_from_string( current_sequence, '-' )
-           valid_sequences.append( current_sequence[ start : end ] )
+           valid_sequences.append( current_sequence[ sequence ] )
+           valid_names.append( names_list[ sequence ] )
 
-   names_list = append_suffix( valid_names, start, end )
-
-   return names_list, valid_sequences
+   return valid_names, valid_sequences
 
 def is_valid_sequence( sequence, min_length, percent_valid ):
    """
