@@ -42,6 +42,8 @@ def main():
 
    oligo.write_fastas( output_names, output_sequences, output_name = options.outPut )
 
+   print( "Number of output oligos: %d" % len( output_sequences ) )
+
 
 
 def add_program_options( option_parser ):
