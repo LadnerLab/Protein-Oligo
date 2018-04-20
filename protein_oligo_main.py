@@ -34,12 +34,15 @@ def main():
    output_sequences = []
 
    # Generate a list of unique sequences for output
-   for item in range( len( subset_sequences ) ):   
-      unique_names, unique_sequences = oligo.create_list_of_uniques( subset_names[ item ], subset_sequences[ item ] )
-      for index in range( len( unique_sequences ) ):
-         output_names.append( unique_names[ index ] )
-         output_sequences.append( unique_sequences[ index ] )
+   total_unique_names = []
+   total_unique_sequences = []
+   for current_sub in subset_sequences:
+      for index in range( len( current_sub ) ):
+         total_unique_names.append( current_sub[ index ] )
+         total_unique_sequences.append( current_sub[ index ] )
 
+
+   output_names, output_sequences = oligo.create_list_of_uniques( total_unique_names, total_unique_sequences )
    oligo.write_fastas( output_names, output_sequences, output_name = options.outPut )
 
    print( "Number of output oligos: %d" % len( output_sequences ) )
