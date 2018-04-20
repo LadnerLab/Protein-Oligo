@@ -30,9 +30,6 @@ def main():
       subset_names.append( current_name )
       subset_sequences.append( current_sequence )
 
-   output_names = []
-   output_sequences = []
-
    # Generate a list of unique sequences for output
    total_unique_names = []
    total_unique_sequences = []
@@ -40,7 +37,6 @@ def main():
       for index in range( len( current_sub ) ):
          total_unique_names.append( current_sub[ index ] )
          total_unique_sequences.append( current_sub[ index ] )
-
 
    output_names, output_sequences = oligo.create_list_of_uniques( total_unique_names, total_unique_sequences )
    oligo.write_fastas( output_names, output_sequences, output_name = options.outPut )
