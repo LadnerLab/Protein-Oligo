@@ -45,7 +45,7 @@ def main():
       for current_subset in subset_sequence:
 
          subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, ymer_size, 1 )
-         subset_ymers.add( item for item in subset_ymer )
+         [ subset_ymers.add( item ) for item in subset_ymer if len( subset_ymer ) > 1 ] 
 
          if oligo.is_valid_sequence( current_subset, options.minLength, options.percentValid ):
             ymer_seq_list.append( current_subset )
@@ -57,6 +57,7 @@ def main():
 
    percent_total = ( len( output_seqs ) / float( len( ymer_seq_list ) ) ) * 100 
 
+   print( subset_ymers )
    print( "Final design includes %d %d-mers ( %.2f%% of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
    print( "%d unique %d-mers in final %d-mers " % ( len( subset_ymers), ymer_size, options.windowSize ) )
 
