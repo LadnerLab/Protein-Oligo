@@ -26,6 +26,7 @@ def main():
 
       win_seqs = [ x [ index:index + options.windowSize] for x in sequences]
       win_names, win_seqs = oligo.create_valid_sequence_list( names, win_seqs, options.minLength, options.percentValid )
+      win_seqs = [ item for oligo.remove_char_from_string( item, '-' ) ]
 
       for each in set( win_seqs ):
          subset_seqs.append( each )
