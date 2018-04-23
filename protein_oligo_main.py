@@ -41,15 +41,14 @@ def main():
          if oligo.is_valid_sequence( current_subset, options.minLength, options.percentValid ):
             ymer_seq_list.append( current_subset )
 
-   # Calculate number of subset xmers in total ymers  
-   print( len( ymer_seq_list ) )
 
-   print( len(subset_seqs) )
    output_names, output_seqs = oligo.create_list_of_uniques(subset_names, subset_seqs)
-   print( len(output_seqs) )
+
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
-   print( "Number of output oligos: %d" % len( output_seqs ) )
+   percent_total = ( len( output_seqs ) / len( ymer_seq_list ) ) * 100 
+
+   print( "Final design includes %d %d-mers ( %d percent of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
 
 
 
