@@ -22,12 +22,13 @@ def main():
    subset_names = []
    subset_seqs = []
 
-   for i in range(0, len(sequences[0])-options.windowSize+1, options.stepSize ):
-      win_seqs = [x[i:i+options.windowSize] for x in sequences]
-      win_names, win_seqs = oligo.create_valid_sequence_list(names, win_seqs, options.minLength, options.percentValid )
-      for each in set(win_seqs):
-         subset_seqs.append(each)
-         subset_names.append(win_names[win_seqs.index(each)])
+   for index in range(0, len( sequences[ 0 ] ) - options.windowSize + 1, options.stepSize ):
+      win_seqs = [ x [ index:index + options.windowSize] for x in sequences]
+      win_names, win_seqs = oligo.create_valid_sequence_list( names, win_seqs, options.minLength, options.percentValid )
+      for each in set( win_seqs ):
+         subset_seqs.append( each )
+         subset_names.append( win_names[ win_seqs.index( each ) ] )
+
 
    print( len(subset_seqs) )
    output_names, output_seqs = oligo.create_list_of_uniques(subset_names, subset_seqs)
