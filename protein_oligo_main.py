@@ -29,9 +29,9 @@ def main():
          subset_seqs.append(each)
          subset_names.append(win_names[win_seqs.index(each)])
 
-   print len(subset_seqs)
+   print( len(subset_seqs) )
    output_names, output_seqs = oligo.create_list_of_uniques(subset_names, subset_seqs)
-   print len(output_seqs)
+   print( len(output_seqs) )
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
    print( "Number of output oligos: %d" % len( output_seqs ) )
