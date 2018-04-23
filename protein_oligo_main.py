@@ -45,7 +45,9 @@ def main():
       for current_subset in subset_sequence:
 
          subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, ymer_size, 1 )
-         [ subset_ymers.add( item ) for item in subset_ymer if len( subset_ymer ) > 1 ] 
+
+         # add each element in subset_ymer if the length of that item is > 1 and it is a valid sequence 
+         [ subset_ymers.add( item ) for item in subset_ymer if len( item ) > 1 and oligo.is_valid_sequence( item, options.minLength, options.percentValid ) ] 
 
          if oligo.is_valid_sequence( current_subset, options.minLength, options.percentValid ):
             ymer_seq_list.append( current_subset )
