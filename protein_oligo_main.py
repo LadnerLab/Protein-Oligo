@@ -26,7 +26,7 @@ def main():
 
       win_seqs = [ x [ index:index + options.windowSize] for x in sequences]
       win_names, win_seqs = oligo.create_valid_sequence_list( names, win_seqs, options.minLength, options.percentValid )
-      win_seqs = [ item for oligo.remove_char_from_string( item, '-' ) ]
+      win_seqs = [ oligo.remove_char_from_string( item, '-' ) for item in win_seqs ]
 
       for each in set( win_seqs ):
          subset_seqs.append( each )
@@ -34,11 +34,19 @@ def main():
 
 
    ymer_seq_list = []
+
+   ymer_size = options.windowSize - options.stepSize + 1 
+   subset_ymers = set()
    
    for index in range( len( sequences ) ):
       subset_name, subset_sequence = oligo.subset_lists_iter( names[ index ], sequences[ index ], options.windowSize, options.stepSize )
+      subset_sequence = [ oligo.remove_char_from_string( item, '-' ) for item in subset_sequence ]
 
       for current_subset in subset_sequence:
+
+         subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, ymer_size, 1 )
+         subset_ymers.add( item for item in subset_ymer )
+
          if oligo.is_valid_sequence( current_subset, options.minLength, options.percentValid ):
             ymer_seq_list.append( current_subset )
 
@@ -47,9 +55,10 @@ def main():
 
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
-   percent_total = ( len( output_seqs ) / len( ymer_seq_list ) ) * 100 
+   percent_total = ( len( output_seqs ) / float( len( ymer_seq_list ) ) ) * 100 
 
-   print( "Final design includes %d %d-mers ( %d percent of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
+   print( "Final design includes %d %d-mers ( %.2f%% of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
+   print( "%d unique %d-mers in final %d-mers " % ( len( subset_ymers), ymer_size, options.windowSize ) )
 
 
 
