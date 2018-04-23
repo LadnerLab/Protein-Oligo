@@ -72,6 +72,8 @@ def percentage_of_char_in_string( test_string, character ):
     for index in range( length ):
         if test_string[ index ] == character:
             char_count += 1
+    if length == 0:
+        return 0
     return ( char_count / length ) * 100
 
 def count_char_in_string( test_string, character ):
