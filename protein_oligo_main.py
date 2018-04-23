@@ -20,28 +20,21 @@ def main():
    names, sequences = oligo.read_fasta_lists( options.alignment )
 
    subset_names = []
-   subset_sequences = []
+   subset_seqs = []
 
-   for index in range( len( sequences ) ):
-      
-      current_name, current_sequence = oligo.subset_lists_iter( names[ index ], sequences[ index ], options.windowSize, options.stepSize ) 
-      current_name, current_sequence = oligo.create_valid_sequence_list( current_name, current_sequence, options.minLength, options.percentValid )
+   for i in range(0, len(sequences[0])-options.windowSize+1, options.stepSize ):
+      win_seqs = [x[i:i+options.windowSize] for x in sequences]
+      win_names, win_seqs = oligo.create_valid_sequence_list(names, win_seqs, options.minLength, options.percentValid )
+      for each in set(win_seqs):
+         subset_seqs.append(each)
+         subset_names.append(win_names[win_seqs.index(each)])
 
-      subset_names.append( current_name )
-      subset_sequences.append( current_sequence )
+   print len(subset_seqs)
+   output_names, output_seqs = oligo.create_list_of_uniques(subset_names, subset_seqs)
+   print len(output_seqs)
+   oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
-   # Generate a list of unique sequences for output
-   total_unique_names = []
-   total_unique_sequences = []
-   for current_sub in subset_sequences:
-      for index in range( len( current_sub ) ):
-         total_unique_names.append( current_sub[ index ] )
-         total_unique_sequences.append( current_sub[ index ] )
-
-   output_names, output_sequences = oligo.create_list_of_uniques( total_unique_names, total_unique_sequences )
-   oligo.write_fastas( output_names, output_sequences, output_name = options.outPut )
-
-   print( "Number of output oligos: %d" % len( output_sequences ) )
+   print( "Number of output oligos: %d" % len( output_seqs ) )
 
 
 
