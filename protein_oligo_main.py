@@ -50,7 +50,6 @@ def main():
    ymer_seq_list = []
 
    subset_ymers = set()
-   print( win_xmers_dict )
    
    for index in range( len( sequences ) ):
       subset_name, subset_sequence = oligo.subset_lists_iter( names[ index ], sequences[ index ], options.windowSize, options.stepSize )
@@ -72,9 +71,12 @@ def main():
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
    percent_total = ( len( output_seqs ) / float( len( ymer_seq_list ) ) ) * 100 
+   percent_xadf =  ( len( subset_ymers ) / len( win_xmers_dict ) ) * 100 
 
    print( "Final design includes %d %d-mers ( %.2f%% of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
-   print( "%d unique %d-mers in final %d-mers " % ( len( subset_ymers), options.XmerWindowSize, options.windowSize ) )
+   print( "%d unique %d-mers in final %d-mers ( %.2f%% of total )" % ( len( subset_ymers), options.XmerWindowSize, options.windowSize, percent_xadf ) )
+
+
 
 
 
