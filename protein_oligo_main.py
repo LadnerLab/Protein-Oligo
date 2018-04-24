@@ -28,7 +28,6 @@ def main():
       win_names, win_seqs = oligo.create_valid_sequence_list( names, win_seqs, options.minLength, options.percentValid )
       win_seqs = [ oligo.remove_char_from_string( item, '-' ) for item in win_seqs ]
 
-
       for each in set( win_seqs ):
          subset_seqs.append( each )
          subset_names.append( win_names[ win_seqs.index( each ) ] )
@@ -48,7 +47,6 @@ def main():
          win_xmers_dict[ item ] = 0
 
    ymer_seq_list = []
-
    subset_ymers = set()
    
    for index in range( len( sequences ) ):
@@ -65,21 +63,15 @@ def main():
          if oligo.is_valid_sequence( current_subset, options.minLength, options.percentValid ):
             ymer_seq_list.append( current_subset )
 
-
-
-
    output_names, output_seqs = oligo.create_list_of_uniques(subset_names, subset_seqs)
 
+   # Calculate redundancy of each xmer in the output ymers
    for current_output in output_seqs:
       name, subset_seq = oligo.subset_lists_iter( [], current_output, options.XmerWindowSize, 1 )
       for item in subset_seq:
           win_xmers_dict[ item ] += 1 
 
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
-
-
-
-
 
    xmer_avg_redundancy = sum( win_xmers_dict.values() ) / len( win_xmers_dict )
    percent_total = calculate_percentage( len( output_seqs ), len( ymer_seq_list ) )
@@ -110,7 +102,7 @@ def add_program_options( option_parser ):
    )
    option_parser.add_option( '-o', '--outPut', default = "oligo_out.txt", help = "Name of file program output will be written to. [oligo_out.txt]"
    )
-   option_parser.add_option( '-p', '--percentValid', type = 'float', default = 90.0, help = (
+   option_parser.add_option( '-p', '--percentValid', type = 'float', default = 100.00, help = (
       "Percent of non '-' characters present in order for the sequence to be considered valid, "  
       "sequences with less than specified amount will not be present in program out put. [90.00] "
    )
