@@ -70,14 +70,16 @@ def main():
 
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
-   percent_total = ( len( output_seqs ) / float( len( ymer_seq_list ) ) ) * 100 
-   percent_xadf =  ( len( subset_ymers ) / len( win_xmers_dict ) ) * 100 
+   percent_total = calculate_percentage( len( output_seqs ), len( ymer_seq_list ) )
+   percent_output_xmers =  ( len( subset_ymers ) / len( win_xmers_dict ) ) * 100 
+   percent_output_xmers = calculate_percentage( len( subset_ymers ), len( win_xmers_dict ) ) 
 
    print( "Final design includes %d %d-mers ( %.2f%% of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
-   print( "%d unique %d-mers in final %d-mers ( %.2f%% of total )" % ( len( subset_ymers), options.XmerWindowSize, options.windowSize, percent_xadf ) )
+   print( "%d unique %d-mers in final %d-mers ( %.2f%% of total )" % ( len( subset_ymers), options.XmerWindowSize, options.windowSize, percent_output_xmers ) )
 
 
-
+def calculate_percentage( first, second ):
+   return ( first / second ) * 100 
 
 
 def add_program_options( option_parser ):
