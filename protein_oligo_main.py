@@ -43,14 +43,14 @@ def main():
         subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, options.XmerWindowSize, 1 )
 
         # add each element in subset_ymer if the length of that item is > 1 and it is a valid sequence 
-        [ subset_ymers.add( item ) for item in subset_ymer if len( item ) > 1 and oligo.is_valid_sequence( item, options.minLength, options.percentValid ) ] 
+        [ subset_ymers.add( item ) for item in subset_ymer if len( item ) > 1 ] 
 
    # Create the dictionary of subset_xmers
    for index in range( len( sequences ) ):
 
-      subset_name_xmer, subset_xmer = oligo.subset_lists_iter( [], sequences[ index ], options.XmerWindowSize, 1 )
-      subset_name_xmer, subset_xmer = oligo.create_valid_sequence_list( "", subset_xmer, options.minLength, options.percentValid )
-      subset_xmer = [ oligo.remove_char_from_string( item, '-' ) for item in subset_xmer ]
+      current_sequence = oligo.remove_char_from_string( sequences[ index ], '-' )
+      subset_name_xmer, subset_xmer = oligo.subset_lists_iter( [], current_sequence, options.XmerWindowSize, 1 )
+      # subset_name_xmer, subset_xmer = oligo.create_valid_sequence_list( "", subset_xmer, options.minLength, options.percentValid )
 
       # create dictionary of xmer-size keys to track score of each xmer
       for item in subset_xmer:
@@ -63,13 +63,19 @@ def main():
    for current_output in output_seqs:
       name, subset_seq = oligo.subset_lists_iter( [], current_output, options.XmerWindowSize, 1 )
       for item in subset_seq:
-          win_xmers_dict[ item ] += 1 
+         if item in win_xmers_dict:
+             win_xmers_dict[ item ] += 1 
+         else:
+            print( "KEYERROR: " + item )
 
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
    xmer_avg_redundancy = sum( win_xmers_dict.values() ) / float( len( win_xmers_dict ) )
    percent_total = calculate_percentage( len( output_seqs ), total_ymers )
    percent_output_xmers = calculate_percentage( len( subset_ymers ), len( win_xmers_dict ) ) 
+
+   print( len( subset_ymers) )
+   print( len(win_xmers_dict) )
 
    print( "Final design includes %d %d-mers ( %.2f%% of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
    print( "%d unique %d-mers in final %d-mers ( %.2f%% of total )" % ( len( subset_ymers), options.XmerWindowSize, options.windowSize, percent_output_xmers ) )
