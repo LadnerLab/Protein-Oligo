@@ -176,7 +176,8 @@ def create_valid_sequence_list( names_list, sequence_list, min_length, percent_v
       if is_valid_sequence( current_sequence, min_length, percent_valid ):
            current_sequence = remove_char_from_string( current_sequence, '-' )
            valid_sequences.append( current_sequence )
-           valid_names.append( names_list[ sequence ] )
+           if names_list:
+               valid_names.append( names_list[ sequence ] )
 
    return valid_names, valid_sequences
 
