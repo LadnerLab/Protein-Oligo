@@ -27,6 +27,7 @@ def main():
 
       win_seqs = [ x [ index:index + options.windowSize ] for x in sequences ]
       win_names, win_seqs = oligo.create_valid_sequence_list( names, win_seqs, options.minLength, options.percentValid )
+      win_names = [ oligo.append_suffix( item, index + 1, index + options.windowSize ) for item in win_names ]
       win_seqs = [ oligo.remove_char_from_string( item, '-' ) for item in win_seqs ]
 
       total_ymers += len( win_seqs )
