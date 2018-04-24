@@ -71,7 +71,7 @@ def main():
 
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
-   xmer_avg_redundancy = sum( win_xmers_dict.values() ) / len( win_xmers_dict )
+   xmer_avg_redundancy = sum( win_xmers_dict.values() ) / float( len( win_xmers_dict ) )
    percent_total = calculate_percentage( len( output_seqs ), len( ymer_seq_list ) )
    percent_output_xmers = calculate_percentage( len( subset_ymers ), len( win_xmers_dict ) ) 
 
@@ -87,7 +87,7 @@ def calculate_percentage( first, second ):
           first: integer or float first value
           second: integer or float second value
    """
-   return ( first / second ) * 100 
+   return ( first / float( second ) ) * 100 
 
 
 def add_program_options( option_parser ):
