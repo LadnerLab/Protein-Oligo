@@ -71,6 +71,7 @@ def main():
 
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
+   print( len(subset_names) )
    xmer_avg_redundancy = sum( win_xmers_dict.values() ) / float( len( win_xmers_dict ) )
    percent_total = calculate_percentage( len( output_seqs ), len( ymer_seq_list ) )
    percent_output_xmers = calculate_percentage( len( subset_ymers ), len( win_xmers_dict ) ) 
@@ -100,7 +101,7 @@ def add_program_options( option_parser ):
    )
    option_parser.add_option( '-o', '--outPut', default = "oligo_out.fasta", help = "Name of file program output will be written to. [oligo_out.fasta]"
    )
-   option_parser.add_option( '-p', '--percentValid', type = 'float', default = 100.00, help = (
+   option_parser.add_option( '-p', '--percentValid', type = 'float', default = 99.00, help = (
       "Percent of non '-' characters present in order for the sequence to be considered valid, "  
       "sequences with less than specified amount will not be present in program out put. [90.00] "
    )
