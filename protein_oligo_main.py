@@ -42,9 +42,8 @@ def main():
       subset_xmer = [ oligo.remove_char_from_string( item, '-' ) for item in subset_xmer ]
 
       for item in subset_xmer:
-         if item in win_xmers_dict:
-            win_xmers_dict[ item ] += 1
-         win_xmers_dict[ item ] = 0
+         if not 'X' in item:
+            win_xmers_dict[ item ] = 0
 
    ymer_seq_list = []
    subset_ymers = set()
@@ -100,7 +99,7 @@ def add_program_options( option_parser ):
                              default = 100, \
                              help = "Amount of characters from each alignment sequence to look at. [100]"
    )
-   option_parser.add_option( '-o', '--outPut', default = "oligo_out.txt", help = "Name of file program output will be written to. [oligo_out.txt]"
+   option_parser.add_option( '-o', '--outPut', default = "oligo_out.fasta", help = "Name of file program output will be written to. [oligo_out.fasta]"
    )
    option_parser.add_option( '-p', '--percentValid', type = 'float', default = 100.00, help = (
       "Percent of non '-' characters present in order for the sequence to be considered valid, "  
