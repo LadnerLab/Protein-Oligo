@@ -34,11 +34,17 @@ def main():
          subset_seqs.append( each )
          subset_names.append( win_names[ win_seqs.index( each ) ] )
 
-
    win_xmers_dict = {}
 
    subset_ymers = set()
    
+   for current_subset in subset_seqs:
+        subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, options.XmerWindowSize, 1 )
+
+        # add each element in subset_ymer if the length of that item is > 1 and it is a valid sequence 
+        [ subset_ymers.add( item ) for item in subset_ymer if len( item ) > 1 and oligo.is_valid_sequence( item, options.minLength, options.percentValid ) ] 
+
+   # Create the dictionary of subset_xmers
    for index in range( len( sequences ) ):
 
       subset_name_xmer, subset_xmer = oligo.subset_lists_iter( [], sequences[ index ], options.XmerWindowSize, 1 )
@@ -49,12 +55,6 @@ def main():
       for item in subset_xmer:
          if not 'X' in item:
             win_xmers_dict[ item ] = 0
-
-   for current_subset in subset_seqs:
-         subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, options.XmerWindowSize, 1 )
-
-         # add each element in subset_ymer if the length of that item is > 1 and it is a valid sequence 
-         [ subset_ymers.add( item ) for item in subset_ymer if len( item ) > 1 and oligo.is_valid_sequence( item, options.minLength, options.percentValid ) ] 
 
    output_names, output_seqs = oligo.create_list_of_uniques(subset_names, subset_seqs)
 
