@@ -34,16 +34,6 @@ def main():
 
 
    win_xmers_dict = {}
-   # create dictionary of xmer-size keys to track score of each xmer
-   for sequence in sequences:
-
-      subset_name, subset_xmer = oligo.subset_lists_iter( [], sequence, options.XmerWindowSize, 1 )
-      subset_name, subset_xmer = oligo.create_valid_sequence_list( "", subset_xmer, options.minLength, options.percentValid )
-      subset_xmer = [ oligo.remove_char_from_string( item, '-' ) for item in subset_xmer ]
-
-      for item in subset_xmer:
-         if not 'X' in item:
-            win_xmers_dict[ item ] = 0
 
    ymer_seq_list = []
    subset_ymers = set()
@@ -51,6 +41,15 @@ def main():
    for index in range( len( sequences ) ):
       subset_name, subset_sequence = oligo.subset_lists_iter( names[ index ], sequences[ index ], options.windowSize, options.stepSize )
       subset_sequence = [ oligo.remove_char_from_string( item, '-' ) for item in subset_sequence ]
+
+      subset_name_xmer, subset_xmer = oligo.subset_lists_iter( [], sequences[ index ], options.XmerWindowSize, 1 )
+      subset_name_xmer, subset_xmer = oligo.create_valid_sequence_list( "", subset_xmer, options.minLength, options.percentValid )
+      subset_xmer = [ oligo.remove_char_from_string( item, '-' ) for item in subset_xmer ]
+
+      # create dictionary of xmer-size keys to track score of each xmer
+      for item in subset_xmer:
+         if not 'X' in item:
+            win_xmers_dict[ item ] = 0
 
       for current_subset in subset_sequence:
 
