@@ -70,12 +70,14 @@ def main():
 
    output_names, output_seqs = oligo.create_list_of_uniques(subset_names, subset_seqs)
 
+   for current_output in output_seqs:
+      name, subset_seq = oligo.subset_lists_iter( [], current_output, options.XmerWindowSize, 1 )
+      for item in subset_seq:
+          win_xmers_dict[ item ] += 1 
+
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
-   for current in output_seqs:
-      name, seq = oligo.subset_lists_iter( [], current, options.XmerWindowSize, 1 )
-      for item in seq:
-          win_xmers_dict[ item ] += 1 
+
 
 
 
