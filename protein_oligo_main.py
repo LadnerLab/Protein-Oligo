@@ -35,7 +35,6 @@ def main():
 
    ymer_seq_list = []
 
-   ymer_size = options.windowSize - options.stepSize + 1 
    subset_ymers = set()
    
    for index in range( len( sequences ) ):
@@ -44,7 +43,7 @@ def main():
 
       for current_subset in subset_sequence:
 
-         subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, ymer_size, 1 )
+         subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, options.XmerWindowSize, 1 )
 
          # add each element in subset_ymer if the length of that item is > 1 and it is a valid sequence 
          [ subset_ymers.add( item ) for item in subset_ymer if len( item ) > 1 and oligo.is_valid_sequence( item, options.minLength, options.percentValid ) ] 
@@ -59,9 +58,8 @@ def main():
 
    percent_total = ( len( output_seqs ) / float( len( ymer_seq_list ) ) ) * 100 
 
-   print( subset_ymers )
    print( "Final design includes %d %d-mers ( %.2f%% of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
-   print( "%d unique %d-mers in final %d-mers " % ( len( subset_ymers), ymer_size, options.windowSize ) )
+   print( "%d unique %d-mers in final %d-mers " % ( len( subset_ymers), options.XmerWindowSize, options.windowSize ) )
 
 
 
@@ -89,6 +87,10 @@ def add_program_options( option_parser ):
 
    option_parser.add_option( '-s', '--stepSize', type = 'int', help = (
       "Step size to move over after each subset of windowSize characters has been read"
+      )
+      )
+   option_parser.add_option( '-x', '--XmerWindowSize', type = 'int', default = 8, help = (
+      "Window size of Xmer sequences used in redundancy calculations [8]."
       )
       )
     
