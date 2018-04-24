@@ -191,7 +191,7 @@ def is_valid_sequence( sequence, min_length, percent_valid ):
        if min_length is None:
            return percentage_of_char_in_string( sequence, '-' ) < ( 100 - percent_valid )
        else:
-           return ( min_concurrent_chars( sequence, '-' ) >= min_length )
+           return ( count_char_in_string( sequence, '-' ) <= len( sequence ) - min_length )
    return False
 
          
