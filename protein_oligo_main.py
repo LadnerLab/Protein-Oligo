@@ -21,6 +21,7 @@ def main():
 
    subset_names = []
    subset_seqs = []
+   total_ymers = 0
 
    for index in range(0, len( sequences[ 0 ] ) - options.windowSize + 1, options.stepSize ):
 
@@ -28,6 +29,7 @@ def main():
       win_names, win_seqs = oligo.create_valid_sequence_list( names, win_seqs, options.minLength, options.percentValid )
       win_seqs = [ oligo.remove_char_from_string( item, '-' ) for item in win_seqs ]
 
+      total_ymers += len( win_seqs )
       for each in set( win_seqs ):
          subset_seqs.append( each )
          subset_names.append( win_names[ win_seqs.index( each ) ] )
@@ -39,8 +41,6 @@ def main():
    subset_ymers = set()
    
    for index in range( len( sequences ) ):
-      subset_name, subset_sequence = oligo.subset_lists_iter( names[ index ], sequences[ index ], options.windowSize, options.stepSize )
-      subset_sequence = [ oligo.remove_char_from_string( item, '-' ) for item in subset_sequence ]
 
       subset_name_xmer, subset_xmer = oligo.subset_lists_iter( [], sequences[ index ], options.XmerWindowSize, 1 )
       subset_name_xmer, subset_xmer = oligo.create_valid_sequence_list( "", subset_xmer, options.minLength, options.percentValid )
@@ -51,8 +51,7 @@ def main():
          if not 'X' in item:
             win_xmers_dict[ item ] = 0
 
-      for current_subset in subset_sequence:
-
+   for current_subset in subset_seqs:
          subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, options.XmerWindowSize, 1 )
 
          # add each element in subset_ymer if the length of that item is > 1 and it is a valid sequence 
@@ -60,6 +59,7 @@ def main():
 
          if oligo.is_valid_sequence( current_subset, options.minLength, options.percentValid ):
             ymer_seq_list.append( current_subset )
+      
 
    output_names, output_seqs = oligo.create_list_of_uniques(subset_names, subset_seqs)
 
@@ -71,9 +71,8 @@ def main():
 
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
-   print( len(subset_names) )
    xmer_avg_redundancy = sum( win_xmers_dict.values() ) / float( len( win_xmers_dict ) )
-   percent_total = calculate_percentage( len( output_seqs ), len( ymer_seq_list ) )
+   percent_total = calculate_percentage( len( output_seqs ), total_ymers )
    percent_output_xmers = calculate_percentage( len( subset_ymers ), len( win_xmers_dict ) ) 
 
    print( "Final design includes %d %d-mers ( %.2f%% of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
