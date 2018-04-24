@@ -25,21 +25,26 @@ def main():
    for index in range(0, len( sequences[ 0 ] ) - options.windowSize + 1, options.stepSize ):
 
       win_seqs = [ x [ index:index + options.windowSize] for x in sequences]
-
-      win_xmers = [ x [ index:index + options.XmerWindowSize] for x in sequences]
-      win_xmers = oligo.create_valid_sequence_list( names, win_xmers, options.minLength, options.percentValid )
-      win_xmers = [ oligo.remove_char_from_string( item, '-' ) for item in win_xmers ]
-
       win_names, win_seqs = oligo.create_valid_sequence_list( names, win_seqs, options.minLength, options.percentValid )
       win_seqs = [ oligo.remove_char_from_string( item, '-' ) for item in win_seqs ]
+
 
       for each in set( win_seqs ):
          subset_seqs.append( each )
          subset_names.append( win_names[ win_seqs.index( each ) ] )
 
 
+   win_xmers_dict = {}
+   for sequence in sequences:
+      subset_name, subset_xmer = oligo.subset_lists_iter( [], sequence, options.XmerWindowSize, options.stepSize )
+      subset_name, subset_xmer = oligo.create_valid_sequence_list( "", subset_xmer, options.minLength, options.percentValid )
+      subset_xmer = [ oligo.remove_char_from_string( item, '-' ) for item in subset_xmer ]
+
+      for item in subset_xmer:
+         win_xmers_dict[ item ] = 0
+
    ymer_seq_list = []
-   print( win_xmers )
+   print( len( win_xmers_dict ) )
 
    subset_ymers = set()
    
