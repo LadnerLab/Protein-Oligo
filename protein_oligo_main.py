@@ -74,9 +74,6 @@ def main():
    percent_total = calculate_percentage( len( output_seqs ), total_ymers )
    percent_output_xmers = calculate_percentage( len( subset_ymers ), len( win_xmers_dict ) ) 
 
-   print( len( subset_ymers) )
-   print( len(win_xmers_dict) )
-
    print( "Final design includes %d %d-mers ( %.2f%% of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
    print( "%d unique %d-mers in final %d-mers ( %.2f%% of total )" % ( len( subset_ymers), options.XmerWindowSize, options.windowSize, percent_output_xmers ) )
    print( "Average redundancy of %d-mers in %d-mers: %.2f" % ( options.XmerWindowSize, options.windowSize, xmer_avg_redundancy ) )
