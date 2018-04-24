@@ -66,19 +66,35 @@ def main():
             ymer_seq_list.append( current_subset )
 
 
+
+
    output_names, output_seqs = oligo.create_list_of_uniques(subset_names, subset_seqs)
 
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
+   for current in output_seqs:
+      name, seq = oligo.subset_lists_iter( [], current, options.XmerWindowSize, 1 )
+      for item in seq:
+          win_xmers_dict[ item ] += 1 
+
+
+
+   xmer_avg_redundancy = sum( win_xmers_dict.values() ) / len( win_xmers_dict )
    percent_total = calculate_percentage( len( output_seqs ), len( ymer_seq_list ) )
-   percent_output_xmers =  ( len( subset_ymers ) / len( win_xmers_dict ) ) * 100 
    percent_output_xmers = calculate_percentage( len( subset_ymers ), len( win_xmers_dict ) ) 
 
    print( "Final design includes %d %d-mers ( %.2f%% of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
    print( "%d unique %d-mers in final %d-mers ( %.2f%% of total )" % ( len( subset_ymers), options.XmerWindowSize, options.windowSize, percent_output_xmers ) )
+   print( "Average redundancy of %d-mers in %d-mers: %.2f" % ( options.XmerWindowSize, options.windowSize, xmer_avg_redundancy ) )
 
 
 def calculate_percentage( first, second ):
+   """
+      Calculates what percent of second first is
+      Params:
+          first: integer or float first value
+          second: integer or float second value
+   """
    return ( first / second ) * 100 
 
 
