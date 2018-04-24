@@ -35,18 +35,22 @@ def main():
 
 
    win_xmers_dict = {}
+   # create dictionary of xmer-size keys to track score of each xmer
    for sequence in sequences:
-      subset_name, subset_xmer = oligo.subset_lists_iter( [], sequence, options.XmerWindowSize, options.stepSize )
+
+      subset_name, subset_xmer = oligo.subset_lists_iter( [], sequence, options.XmerWindowSize, 1 )
       subset_name, subset_xmer = oligo.create_valid_sequence_list( "", subset_xmer, options.minLength, options.percentValid )
       subset_xmer = [ oligo.remove_char_from_string( item, '-' ) for item in subset_xmer ]
 
       for item in subset_xmer:
+         if item in win_xmers_dict:
+            win_xmers_dict[ item ] += 1
          win_xmers_dict[ item ] = 0
 
    ymer_seq_list = []
-   print( len( win_xmers_dict ) )
 
    subset_ymers = set()
+   print( win_xmers_dict )
    
    for index in range( len( sequences ) ):
       subset_name, subset_sequence = oligo.subset_lists_iter( names[ index ], sequences[ index ], options.windowSize, options.stepSize )
