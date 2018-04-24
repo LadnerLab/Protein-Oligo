@@ -25,7 +25,7 @@ def main():
 
    for index in range(0, len( sequences[ 0 ] ) - options.windowSize + 1, options.stepSize ):
 
-      win_seqs = [ x [ index:index + options.windowSize] for x in sequences]
+      win_seqs = [ x [ index:index + options.windowSize ] for x in sequences ]
       win_names, win_seqs = oligo.create_valid_sequence_list( names, win_seqs, options.minLength, options.percentValid )
       win_seqs = [ oligo.remove_char_from_string( item, '-' ) for item in win_seqs ]
 
@@ -38,6 +38,7 @@ def main():
 
    subset_ymers = set()
    
+   # create subset xmers from out ymers
    for current_subset in subset_seqs:
         subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, options.XmerWindowSize, 1 )
 
@@ -56,7 +57,7 @@ def main():
          if not 'X' in item:
             win_xmers_dict[ item ] = 0
 
-   output_names, output_seqs = oligo.create_list_of_uniques(subset_names, subset_seqs)
+   output_names, output_seqs = oligo.create_list_of_uniques( subset_names, subset_seqs )
 
    # Calculate redundancy of each xmer in the output ymers
    for current_output in output_seqs:
