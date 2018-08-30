@@ -21,7 +21,7 @@ def main():
 
    subset_names = []
    subset_seqs = []
-   total_ymers = set()
+   total_ymers = 0
 
    for index in range(0, len( sequences[ 0 ] ) - options.windowSize + 1, options.stepSize ):
 
@@ -29,10 +29,10 @@ def main():
       win_names, win_seqs = oligo.create_valid_sequence_list( names, win_seqs, options.minLength, options.percentValid )
       win_seqs = [ oligo.remove_char_from_string( item, '-' ) for item in win_seqs ]
 
-      total_ymers |= set( win_seqs )
+      total_ymers += len( win_seqs )
       for each in set( win_seqs ):
          subset_seqs.append( each )
-         subset_names.append( win_names[ win_seqs.index( each ) ] )
+         subset_names.append( win_names[ win_seqs.index( each ) ] + "_" + str( index ) + "_" + str( index + options.windowSize )   )
 
    win_xmers_dict = {}
 
@@ -71,7 +71,7 @@ def main():
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
    xmer_avg_redundancy = sum( win_xmers_dict.values() ) / float( len( win_xmers_dict ) )
-   percent_total = calculate_percentage( len( output_seqs ), len( total_ymers ) )
+   percent_total = calculate_percentage( len( output_seqs ), total_ymers )
    percent_output_xmers = calculate_percentage( len( subset_ymers ), len( win_xmers_dict ) ) 
 
    print( "Final design includes %d %d-mers ( %.2f%% of total )" % ( len( output_seqs ), options.windowSize, percent_total ) )
