@@ -209,7 +209,6 @@ def subset_lists_iter( name, sequence, window_size, step_size ):
     start = 0
     end = window_size
     index = 0
-    sequence = sequence.replace( '-', '' )
 
     while end <= len( sequence ):
        new_seqs.append( sequence[ start : end ] )
