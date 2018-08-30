@@ -25,10 +25,28 @@ def main():
 
    for index in range(0, len( sequences[ 0 ] ) - options.windowSize + 1, options.stepSize ):
 
-      win_seqs = [ x [ index:index + options.windowSize ] for x in sequences ]
+      win_seqs = list()
+      for x in sequences:
+         current_xmer = x[ index:index + options.windowSize ]
+         num_gaps = current_xmer.count( '-' )
+
+         if num_gaps:
+            gap_index = index + options.windowSize
+
+            current_xmer = current_xmer.replace( '-', '' )
+            while num_gaps and gap_index < len( x ):
+               if x[ gap_index ] != '-':
+                  current_xmer += x[ gap_index ]
+
+                  num_gaps -= 1
+               gap_index += 1
+
+         win_seqs.append( current_xmer )
+            
       win_names, win_seqs = oligo.create_valid_sequence_list( names, win_seqs, options.minLength, options.percentValid )
       win_seqs = [ oligo.remove_char_from_string( item, '-' ) for item in win_seqs ]
 
+               
       total_ymers += len( win_seqs )
       for each in set( win_seqs ):
          subset_seqs.append( each )
