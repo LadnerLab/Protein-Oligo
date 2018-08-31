@@ -23,34 +23,19 @@ def main():
    subset_seqs = []
    total_ymers = 0
 
-   for index in range(0, len( sequences[ 0 ] ) - options.windowSize + 1, options.stepSize ):
+              
+   for index in range( len( names ) ):
+      current_sequence = sequences[ index ]
+      current_name = names[ index ]
 
-      win_seqs = list()
-      for x in sequences:
-         current_xmer = x[ index:index + options.windowSize ]
-         num_gaps = current_xmer.count( '-' )
-
-         if num_gaps:
-            gap_index = index + options.windowSize
-
-            current_xmer = current_xmer.replace( '-', '' )
-            while num_gaps and gap_index < len( x ):
-               if x[ gap_index ] != '-':
-                  current_xmer += x[ gap_index ]
-
-                  num_gaps -= 1
-               gap_index += 1
-
-         win_seqs.append( current_xmer )
-            
-      win_names, win_seqs = oligo.create_valid_sequence_list( names, win_seqs, options.minLength, options.percentValid )
-      win_seqs = [ oligo.remove_char_from_string( item, '-' ) for item in win_seqs ]
-
-               
-      total_ymers += len( win_seqs )
-      for each in set( win_seqs ):
+      win_names, current_kmers = oligo.subset_lists_iter( current_name, current_sequence,
+                                                          options.windowSize, options.stepSize
+                                                        )
+      
+      total_ymers += len( current_kmers )
+      for each in set( current_kmers ):
          subset_seqs.append( each )
-         subset_names.append( win_names[ win_seqs.index( each ) ] + "_" + str( index ) + "_" + str( index + options.windowSize )   )
+         subset_names.append( win_names[ current_kmers.index( each ) ] + "_" + str( index ) + "_" + str( index + options.windowSize )   )
 
    win_xmers_dict = {}
 
