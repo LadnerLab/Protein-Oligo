@@ -50,17 +50,16 @@ def main():
 
    # Create the dictionary of subset_xmers
    for index in range( len( sequences ) ):
+      current_sequence = sequences[ index ]
 
-      current_sequence = oligo.remove_char_from_string( sequences[ index ], '-' )
       subset_name_xmer, subset_xmer = oligo.subset_lists_iter( [], current_sequence, options.XmerWindowSize, 1 )
-      # subset_name_xmer, subset_xmer = oligo.create_valid_sequence_list( "", subset_xmer, options.minLength, options.percentValid )
 
       # create dictionary of xmer-size keys to track score of each xmer
       for item in subset_xmer:
          if not 'X' in item:
             win_xmers_dict[ item ] = 0
 
-   output_names, output_seqs = oligo.create_list_of_uniques( subset_names, subset_seqs )
+   output_names, output_seqs = subset_names, subset_seqs
 
    # Calculate redundancy of each xmer in the output ymers
    for current_output in output_seqs:
