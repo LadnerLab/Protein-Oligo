@@ -212,7 +212,7 @@ def subset_lists_iter( name, sequence, window_size, step_size ):
 
     while end < len( sequence ):
        xmer = grab_xmer_from_seq( sequence, start, window_size )
-       if 'X' not in xmer:
+       if 'X' not in xmer and len( xmer ) == window_size and '-' not in xmer:
            new_seqs.append( xmer )
            new_names.append( append_suffix( name, start + 1, end ) )
 
