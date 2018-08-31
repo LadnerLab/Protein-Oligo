@@ -210,14 +210,44 @@ def subset_lists_iter( name, sequence, window_size, step_size ):
     end = window_size
     index = 0
 
-    while end <= len( sequence ):
-       new_seqs.append( sequence[ start : end ] )
-       new_names.append( append_suffix( name, start + 1, end ) )
+    while end < len( sequence ):
+       xmer = grab_xmer_from_seq( sequence, start, window_size )
+       if 'X' not in xmer:
+           new_seqs.append( xmer )
+           new_names.append( append_suffix( name, start + 1, end ) )
 
        start += step_size
        end = start + window_size 
 
     return new_names, new_seqs
+
+def grab_xmer_from_seq( sequence, start, window_size ):
+   out_xmer = ""
+   xmer_len = 0
+   probe_index = start
+
+   while xmer_len < window_size \
+        and probe_index < len( sequence ):
+
+        probe_char = sequence[ probe_index ]
+
+        while probe_char == '-' \
+            and probe_index < len( sequence ):
+
+            if probe_index == len( sequence ):
+                print( "?" )
+            probe_char = sequence[ probe_index ]
+            probe_index += 1
+
+        if probe_index < len( sequence ):
+            probe_char = sequence[ probe_index ]
+            probe_index += 1
+
+        out_xmer += probe_char
+        xmer_len += 1
+
+   return out_xmer
+           
 
 def subset_lists( name, sequence, window_size, step_size ):
    """
