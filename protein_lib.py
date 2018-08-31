@@ -226,25 +226,21 @@ def grab_xmer_from_seq( sequence, start, window_size ):
    xmer_len = 0
    probe_index = start
 
-   while xmer_len < window_size \
-        and probe_index < len( sequence ):
+   while xmer_len < window_size and probe_index < len( sequence ):
 
         probe_char = sequence[ probe_index ]
 
-        while probe_char == '-' \
-            and probe_index < len( sequence ):
+        while probe_char == '-' and probe_index < len( sequence ):
 
-            if probe_index == len( sequence ):
-                print( "?" )
             probe_char = sequence[ probe_index ]
             probe_index += 1
 
         if probe_index < len( sequence ):
-            probe_char = sequence[ probe_index ]
-            probe_index += 1
+            out_xmer += probe_char
 
-        out_xmer += probe_char
-        xmer_len += 1
+            probe_index += 1
+            xmer_len += 1
+
 
    return out_xmer
            
