@@ -225,21 +225,22 @@ def grab_xmer_from_seq( sequence, start, window_size ):
    out_xmer = ""
    xmer_len = 0
    probe_index = start
-
    while xmer_len < window_size and probe_index < len( sequence ):
 
         probe_char = sequence[ probe_index ]
+        skipped = False
 
         while probe_char == '-' and probe_index < len( sequence ):
 
             probe_char = sequence[ probe_index ]
             probe_index += 1
+            skipped = True
 
         if probe_index < len( sequence ):
             out_xmer += probe_char
-
-            probe_index += 1
             xmer_len += 1
+            if not skipped:
+                probe_index += 1
 
 
    return out_xmer
