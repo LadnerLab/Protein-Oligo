@@ -133,6 +133,18 @@ def remove_char_from_string( test_string, to_remove ):
     return output
 
 
+def get_unique_sequences( names_list, sequence_list ):
+    sequence_dict = {}
+    out_names, out_seqs = list(), list()
+
+    for item in range( len( sequence_list ) ):
+        sequence_dict[ sequence_list[ item ] ] = names_list[ item ]
+
+    for sequence, name in sequence_dict.items():
+        out_names.append( name )
+        out_seqs.append( sequence )
+    return out_names, out_seqs
+
 def create_list_of_uniques( names, sequences ):
     """
        Removes duplicates from a list
