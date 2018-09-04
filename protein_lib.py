@@ -257,7 +257,43 @@ def grab_xmer_from_seq( sequence, start, window_size, span_gaps ):
 
 
    return out_xmer
-           
+
+def get_kmers_from_seqs(            
+                        names,
+                        sequences,
+                        window_size,
+                        step_size,
+                        span_gaps
+    ):
+
+   total_kmers = 0
+
+   subset_names = list()
+   subset_seqs = list()
+
+   for index in range( len( sequences ) ):
+
+      current_sequence = sequences[ index ]
+
+      if len( names ) > 0:
+          current_name = names[ index ]
+      else:
+          current_name = ""
+
+      win_names, current_kmers = subset_lists_iter( current_name, current_sequence,
+                                                    window_size, step_size,
+                                                    span_gaps
+                                                  )
+      
+      total_kmers += len( set( current_kmers ) )
+      for each in set( current_kmers ):
+         subset_seqs.append( each )
+         subset_names.append( win_names[ current_kmers.index( each ) ] + "_" + str( index ) + "_" + str( index + window_size )   )
+
+   subset_names, subset_seqs = get_unique_sequences( subset_names, subset_seqs )
+
+   return subset_names, subset_seqs, total_kmers
+
 
 def subset_lists( name, sequence, window_size, step_size ):
    """

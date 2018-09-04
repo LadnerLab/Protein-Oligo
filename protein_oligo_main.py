@@ -25,50 +25,38 @@ def main():
 
    span_gaps = options.dont_span_gaps == None
 
-              
-   for index in range( len( names ) ):
-      current_sequence = sequences[ index ]
-      current_name = names[ index ]
+   subset_names, subset_seqs, total_ymers = oligo.get_kmers_from_seqs( names,
+                                                                       sequences,
+                                                                       options.windowSize,
+                                                                       options.stepSize,
+                                                                       span_gaps
+                                            )
 
-      win_names, current_kmers = oligo.subset_lists_iter( current_name, current_sequence,
-                                                          options.windowSize, options.stepSize,
-                                                          span_gaps
-                                                        )
-      
-      total_ymers += len( current_kmers )
-      for each in set( current_kmers ):
-         subset_seqs.append( each )
-         subset_names.append( win_names[ current_kmers.index( each ) ] + "_" + str( index ) + "_" + str( index + options.windowSize )   )
-
-   subset_names, subset_seqs = oligo.get_unique_sequences( subset_names, subset_seqs )
-
-   win_xmers_dict = {}
-   subset_ymers = set()
    
    # create subset xmers from out ymers
-   for current_subset in subset_seqs:
-        subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, options.XmerWindowSize, 1, span_gaps )
+   design_ymer_subset_names, subset_ymers, total_xmers = oligo.get_kmers_from_seqs( "",
+                                                                       subset_seqs,
+                                                                       options.XmerWindowSize,
+                                                                       1,
+                                                                       span_gaps
+                                                                      )
 
-        # add each element in subset_ymer if the length of that item is > 1 and it is a valid sequence 
-        [ subset_ymers.add( item ) for item in subset_ymer ] 
+   subset_xmer_names, subset_xmers, total_xmers = oligo.get_kmers_from_seqs( "",
+                                                                             sequences,
+                                                                             options.XmerWindowSize,
+                                                                             1,
+                                                                             span_gaps
+                                                                           )  
 
-   # Create the dictionary of subset_xmers
-   for index in range( len( sequences ) ):
-      current_sequence = sequences[ index ]
-
-      subset_name_xmer, subset_xmer = oligo.subset_lists_iter( "", current_sequence, options.XmerWindowSize, 1,
-                                                               span_gaps
-                                                             )
-
-      # create dictionary of xmer-size keys to track score of each xmer
-      for item in set( subset_xmer ):
-            win_xmers_dict[ item ] = 0
+   win_xmers_dict = {}
+   for item in subset_xmers:
+        win_xmers_dict[ item ] = 0
 
    output_names, output_seqs = subset_names, subset_seqs
 
    # Calculate redundancy of each xmer in the output ymers
    for current_output in output_seqs:
-      name, subset_seq = oligo.subset_lists_iter( "", current_output, options.XmerWindowSize, 1 )
+      name, subset_seq = oligo.subset_lists_iter( "", current_output, options.XmerWindowSize, 1, span_gaps )
       for item in set( subset_seq ):
          if item in win_xmers_dict:
              win_xmers_dict[ item ] += 1 
