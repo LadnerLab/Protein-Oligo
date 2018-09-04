@@ -125,7 +125,9 @@ def add_program_options( option_parser ):
                              "walks across each sequence. Kmers with more than percentValid percent of gaps "
                              "or less than minLength number of gaps will be included. Otherwise, kmer searching will "
                              "be done across gaps."
-                                                         )
+                                                         ),
+                             action = "store_true"
+
    )
 
     
