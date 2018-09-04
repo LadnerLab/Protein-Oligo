@@ -55,7 +55,7 @@ def main():
       subset_name_xmer, subset_xmer = oligo.subset_lists_iter( "", current_sequence, options.XmerWindowSize, 1 )
 
       # create dictionary of xmer-size keys to track score of each xmer
-      for item in subset_xmer:
+      for item in set( subset_xmer ):
             win_xmers_dict[ item ] = 0
 
    output_names, output_seqs = subset_names, subset_seqs
@@ -63,7 +63,7 @@ def main():
    # Calculate redundancy of each xmer in the output ymers
    for current_output in output_seqs:
       name, subset_seq = oligo.subset_lists_iter( "", current_output, options.XmerWindowSize, 1 )
-      for item in subset_seq:
+      for item in set( subset_seq ):
          if item in win_xmers_dict:
              win_xmers_dict[ item ] += 1 
          else:
