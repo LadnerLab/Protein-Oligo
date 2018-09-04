@@ -37,8 +37,9 @@ def main():
          subset_seqs.append( each )
          subset_names.append( win_names[ current_kmers.index( each ) ] + "_" + str( index ) + "_" + str( index + options.windowSize )   )
 
-   win_xmers_dict = {}
+   subset_names, subset_seqs = oligo.get_unique_sequences( subset_names, subset_seqs )
 
+   win_xmers_dict = {}
    subset_ymers = set()
    
    # create subset xmers from out ymers
