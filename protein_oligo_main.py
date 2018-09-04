@@ -19,6 +19,9 @@ def main():
 
    names, sequences = oligo.read_fasta_lists( options.alignment )
 
+   # Determine what gaps constraints to use, if any
+   gap_constraints = options.minLength if options.minLength else options.percentValid
+
    subset_names = []
    subset_seqs = []
    total_ymers = 0
@@ -29,7 +32,8 @@ def main():
                                                                        sequences,
                                                                        options.windowSize,
                                                                        options.stepSize,
-                                                                       span_gaps
+                                                                       span_gaps,
+                                                                       gap_constraints
                                             )
 
    
@@ -38,14 +42,16 @@ def main():
                                                                        subset_seqs,
                                                                        options.XmerWindowSize,
                                                                        1,
-                                                                       span_gaps
+                                                                       span_gaps,
+                                                                       gap_constraints
                                                                       )
 
    subset_xmer_names, subset_xmers, total_xmers = oligo.get_kmers_from_seqs( "",
                                                                              sequences,
                                                                              options.XmerWindowSize,
                                                                              1,
-                                                                             span_gaps
+                                                                             span_gaps,
+                                                                             gap_constraints
                                                                            )  
 
    win_xmers_dict = {}

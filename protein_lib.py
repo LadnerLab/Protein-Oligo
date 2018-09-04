@@ -193,17 +193,19 @@ def create_valid_sequence_list( names_list, sequence_list, min_length, percent_v
 
    return valid_names, valid_sequences
 
-def is_valid_sequence( sequence, min_length, percent_valid ):
+def is_valid_sequence( sequence, gap_constraint ):
    """
        Determines whether a given sequence is valid 
        A valid sequence is defined by not having any 'X' characters,
            and not violating the parameters of either min_length or percent_valid 
    """
    if not char_in_string( sequence, 'X' ):
-       if min_length is None:
-           return percentage_of_char_in_string( sequence, '-' ) < ( 100 - percent_valid )
+       if isinstance( gap_constraint, float ):
+           return percentage_of_char_in_string( sequence, '-' ) < ( 100 - gap_constraint )
+       elif isinstance( gap_constraint, int ):
+           return ( count_char_in_string( sequence, '-' ) <= len( sequence ) - gap_constraint )
        else:
-           return ( count_char_in_string( sequence, '-' ) <= len( sequence ) - min_length )
+           return True
    return False
 
          
@@ -214,7 +216,7 @@ def append_suffix( string, start, end ):
    return "%s_%s_%s" % ( string, str( start ), str( end ) ) 
 
 
-def subset_lists_iter( name, sequence, window_size, step_size, span_gaps ):
+def subset_lists_iter( name, sequence, window_size, step_size, span_gaps, gap_constraints = None):
     new_names = []
     new_seqs = []
 
@@ -224,7 +226,8 @@ def subset_lists_iter( name, sequence, window_size, step_size, span_gaps ):
 
     while end < len( sequence ):
        xmer = grab_xmer_from_seq( sequence, start, window_size, span_gaps )
-       if 'X' not in xmer and len( xmer ) == window_size and '-' not in xmer:
+
+       if len( xmer ) == window_size and is_valid_sequence( xmer, gap_constraints ):
            new_seqs.append( xmer )
            new_names.append( append_suffix( name, start + 1, end ) )
 
@@ -263,7 +266,8 @@ def get_kmers_from_seqs(
                         sequences,
                         window_size,
                         step_size,
-                        span_gaps
+                        span_gaps,
+                        gap_constraints
     ):
 
    total_kmers = 0
