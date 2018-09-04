@@ -23,13 +23,16 @@ def main():
    subset_seqs = []
    total_ymers = 0
 
+   span_gaps = options.dont_span_gaps == None
+
               
    for index in range( len( names ) ):
       current_sequence = sequences[ index ]
       current_name = names[ index ]
 
       win_names, current_kmers = oligo.subset_lists_iter( current_name, current_sequence,
-                                                          options.windowSize, options.stepSize
+                                                          options.windowSize, options.stepSize,
+                                                          span_gaps
                                                         )
       
       total_ymers += len( current_kmers )
@@ -44,7 +47,7 @@ def main():
    
    # create subset xmers from out ymers
    for current_subset in subset_seqs:
-        subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, options.XmerWindowSize, 1 )
+        subset_name, subset_ymer = oligo.subset_lists_iter( "", current_subset, options.XmerWindowSize, 1, span_gaps )
 
         # add each element in subset_ymer if the length of that item is > 1 and it is a valid sequence 
         [ subset_ymers.add( item ) for item in subset_ymer ] 
@@ -53,7 +56,9 @@ def main():
    for index in range( len( sequences ) ):
       current_sequence = sequences[ index ]
 
-      subset_name_xmer, subset_xmer = oligo.subset_lists_iter( "", current_sequence, options.XmerWindowSize, 1 )
+      subset_name_xmer, subset_xmer = oligo.subset_lists_iter( "", current_sequence, options.XmerWindowSize, 1,
+                                                               span_gaps
+                                                             )
 
       # create dictionary of xmer-size keys to track score of each xmer
       for item in set( subset_xmer ):
@@ -121,6 +126,14 @@ def add_program_options( option_parser ):
       "Window size of Xmer sequences used in redundancy calculations [8]."
       )
       )
+   option_parser.add_option( '--dont_span_gaps', help = (
+                             "Include if you do not want sliding window approach to span gaps as it "
+                             "walks across each sequence. Kmers with more than percentValid percent of gaps "
+                             "or less than minLength number of gaps will be included. Otherwise, kmer searching will "
+                             "be done across gaps."
+                                                         )
+   )
+
     
   
 

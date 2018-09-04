@@ -214,7 +214,7 @@ def append_suffix( string, start, end ):
    return "%s_%s_%s" % ( string, str( start ), str( end ) ) 
 
 
-def subset_lists_iter( name, sequence, window_size, step_size ):
+def subset_lists_iter( name, sequence, window_size, step_size, span_gaps ):
     new_names = []
     new_seqs = []
 
@@ -223,7 +223,7 @@ def subset_lists_iter( name, sequence, window_size, step_size ):
     index = 0
 
     while end < len( sequence ):
-       xmer = grab_xmer_from_seq( sequence, start, window_size )
+       xmer = grab_xmer_from_seq( sequence, start, window_size, span_gaps )
        if 'X' not in xmer and len( xmer ) == window_size and '-' not in xmer:
            new_seqs.append( xmer )
            new_names.append( append_suffix( name, start + 1, end ) )
@@ -233,20 +233,21 @@ def subset_lists_iter( name, sequence, window_size, step_size ):
 
     return new_names, new_seqs
 
-def grab_xmer_from_seq( sequence, start, window_size ):
+def grab_xmer_from_seq( sequence, start, window_size, span_gaps ):
    out_xmer = ""
    xmer_len = 0
    probe_index = start
+
    while xmer_len < window_size and probe_index < len( sequence ):
 
         probe_char = sequence[ probe_index ]
         skipped = False
 
-        while probe_char == '-' and probe_index < len( sequence ):
-
-            probe_char = sequence[ probe_index ]
-            probe_index += 1
-            skipped = True
+        if span_gaps:
+            while probe_char == '-' and probe_index < len( sequence ):
+                probe_char = sequence[ probe_index ]
+                probe_index += 1
+                skipped = True
 
         if probe_index < len( sequence ):
             out_xmer += probe_char
