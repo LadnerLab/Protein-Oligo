@@ -327,7 +327,7 @@ def subset_lists_helper( name, sequence, name_arr, seq_arr, window_size, step_si
     """
         Recursive helper method called by subset_lists
     """
-    if start + window_size < len( sequence ):
+    if start + window_size <= len( sequence ):
        if len( sequence[ start: end ] ) == 1:
            return
        seq_arr.append( sequence[ start : end ] ) 
