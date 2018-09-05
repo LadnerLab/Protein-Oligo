@@ -33,7 +33,7 @@ def main():
                                                                        options.windowSize,
                                                                        options.stepSize,
                                                                        span_gaps,
-                                                                       gap_constraints
+                                                                       gap_constraint = gap_constraints
                                             )
 
    
