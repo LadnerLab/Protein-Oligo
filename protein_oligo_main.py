@@ -42,16 +42,14 @@ def main():
                                                                        subset_seqs,
                                                                        options.XmerWindowSize,
                                                                        1,
-                                                                       span_gaps,
-                                                                       gap_constraints
+                                                                       span_gaps
                                                                       )
 
    subset_xmer_names, subset_xmers, total_xmers = oligo.get_kmers_from_seqs( "",
                                                                              sequences,
                                                                              options.XmerWindowSize,
                                                                              1,
-                                                                             span_gaps,
-                                                                             gap_constraints
+                                                                             span_gaps
                                                                            )  
 
    win_xmers_dict = {}

@@ -137,13 +137,15 @@ def get_unique_sequences( names_list, sequence_list ):
     sequence_dict = {}
     out_names, out_seqs = list(), list()
 
-    for item in range( len( sequence_list ) ):
-        sequence_dict[ sequence_list[ item ] ] = names_list[ item ]
+    if len( names_list ) > 0:
+        for item in range( len( sequence_list ) ):
+            sequence_dict[ sequence_list[ item ] ] = names_list[ item ]
 
-    for sequence, name in sequence_dict.items():
-        out_names.append( name )
-        out_seqs.append( sequence )
-    return out_names, out_seqs
+        for sequence, name in sequence_dict.items():
+            out_names.append( name )
+            out_seqs.append( sequence )
+        return out_names, out_seqs
+    return [  ], sequence_list
 
 def create_list_of_uniques( names, sequences ):
     """
@@ -199,13 +201,13 @@ def is_valid_sequence( sequence, gap_constraint ):
        A valid sequence is defined by not having any 'X' characters,
            and not violating the parameters of either min_length or percent_valid 
    """
-   if not char_in_string( sequence, 'X' ):
-       if isinstance( gap_constraint, float ):
+   if sequence.count( 'X' ) == 0:
+       if gap_constraint == None:
+           return True
+       elif isinstance( gap_constraint, float ):
            return percentage_of_char_in_string( sequence, '-' ) < ( 100 - gap_constraint )
        elif isinstance( gap_constraint, int ):
-           return ( count_char_in_string( sequence, '-' ) <= len( sequence ) - gap_constraint )
-       else:
-           return True
+           return ( sequence.count( '-' ) <= len( sequence.replace( '-', '' ) ) - gap_constraint )
    return False
 
          
@@ -228,8 +230,11 @@ def subset_lists_iter( name, sequence, window_size, step_size, span_gaps, gap_co
        xmer = grab_xmer_from_seq( sequence, start, window_size, span_gaps )
 
        if len( xmer ) == window_size and is_valid_sequence( xmer, gap_constraints ):
-           new_seqs.append( xmer )
-           new_names.append( append_suffix( name, start + 1, end ) )
+
+           xmer_no_gaps = xmer.replace( '-', '' )
+           if xmer_no_gaps:
+               new_seqs.append( xmer.replace( '-', '' ) )
+               new_names.append( append_suffix( name, start + 1, end ) )
 
        start += step_size
        end = start + window_size 
@@ -267,7 +272,7 @@ def get_kmers_from_seqs(
                         window_size,
                         step_size,
                         span_gaps,
-                        gap_constraints
+                        gap_constraint = None
     ):
 
    total_kmers = 0
@@ -290,9 +295,11 @@ def get_kmers_from_seqs(
                                                   )
       
       total_kmers += len( set( current_kmers ) )
+
       for each in set( current_kmers ):
          subset_seqs.append( each )
          subset_names.append( win_names[ current_kmers.index( each ) ] + "_" + str( index ) + "_" + str( index + window_size )   )
+
 
    subset_names, subset_seqs = get_unique_sequences( subset_names, subset_seqs )
 
