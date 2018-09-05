@@ -59,13 +59,9 @@ def main():
    output_names, output_seqs = subset_names, subset_seqs
 
    # Calculate redundancy of each xmer in the output ymers
-   for current_output in output_seqs:
-      name, subset_seq = oligo.subset_lists_iter( "", current_output, options.XmerWindowSize, 1, span_gaps )
-      for item in set( subset_seq ):
-         if item in win_xmers_dict:
-             win_xmers_dict[ item ] += 1 
-         else:
-            print( "KEYERROR: " + item )
+   for current_output in set( subset_ymers ):
+     if current_output in win_xmers_dict:
+         win_xmers_dict[ current_output ] += 1 
 
    oligo.write_fastas( output_names, output_seqs, output_name = options.outPut )
 
