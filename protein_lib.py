@@ -230,10 +230,10 @@ def subset_lists_iter( name, sequence, window_size, step_size, span_gaps, gap_co
        xmer = grab_xmer_from_seq( sequence, start, window_size, span_gaps )
 
        if len( xmer ) == window_size and is_valid_sequence( xmer, gap_constraints ):
+           xmer = xmer.replace( '-', '' )
 
-           xmer_no_gaps = xmer.replace( '-', '' )
-           if xmer_no_gaps:
-               new_seqs.append( xmer.replace( '-', '' ) )
+           if xmer:
+               new_seqs.append( xmer )
                new_names.append( append_suffix( name, start + 1, end ) )
 
        start += step_size
@@ -291,7 +291,8 @@ def get_kmers_from_seqs(
 
       win_names, current_kmers = subset_lists_iter( current_name, current_sequence,
                                                     window_size, step_size,
-                                                    span_gaps
+                                                    span_gaps,
+                                                    gap_constraint
                                                   )
       
       total_kmers += len( set( current_kmers ) )
