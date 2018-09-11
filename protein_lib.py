@@ -50,10 +50,7 @@ def char_in_string( test_string, character ):
     """
         Checks if a character is found within a given string
     """
-    for index in range( len( test_string ) ):
-        if test_string[ index ] == character:
-            return True
-    return False
+    return character in test_string
 
 def percentage_of_char_in_string( test_string, character ):
     """
