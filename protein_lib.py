@@ -269,10 +269,17 @@ def grab_xmer_from_seq( sequence, start, window_size, span_gaps ):
 def calc_start_index( in_seq, start_index, window_size, span_gaps ):
    
     in_seq_len = len( in_seq )
-    kmer_length = ( in_seq_len - start_index ) - in_seq.count( '-', start_index )
     probe_index = start_index
+    current_index = 0
 
-    if ( in_seq_len - in_seq.count( '-', start_index ) ) - start_index < window_size:
+    if not span_gaps:
+        kmer_length = ( in_seq_len - start_index ) - in_seq.count( '-', start_index )
+        current_index = in_seq_len - in_seq.count( '-', start_index ) - start_index
+    else:
+        kmer_length = ( in_seq_len - start_index ) 
+        current_index = in_seq_len - start_index
+
+    if current_index < window_size:
 
         while kmer_length < window_size and probe_index > 0:
             probe_index -= 1
