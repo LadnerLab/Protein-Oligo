@@ -232,7 +232,6 @@ def subset_lists_iter( name, sequence, window_size, step_size, span_gaps, gap_co
            if xmer:
                new_seqs.append( xmer )
                new_names.append( append_suffix( name, start + 1, end ) )
-
        start += step_size
        end = start + window_size 
 
@@ -242,19 +241,22 @@ def grab_xmer_from_seq( sequence, start, window_size, span_gaps ):
    out_xmer = ""
    xmer_len = 0
    probe_index = start
+   sequence_len = len( sequence )
 
-   while xmer_len < window_size and probe_index < len( sequence ):
+   probe_index = calc_start_index( sequence, start, window_size, span_gaps )
+       
+   while xmer_len < window_size and probe_index < sequence_len:
 
         probe_char = sequence[ probe_index ]
         skipped = False
 
         if span_gaps:
-            while probe_char == '-' and probe_index < len( sequence ):
+            while probe_char == '-' and probe_index < sequence_len:
                 probe_char = sequence[ probe_index ]
                 probe_index += 1
                 skipped = True
 
-        if probe_index < len( sequence ):
+        if probe_index < sequence_len:
             out_xmer += probe_char
             xmer_len += 1
             if not skipped:
@@ -262,6 +264,25 @@ def grab_xmer_from_seq( sequence, start, window_size, span_gaps ):
 
 
    return out_xmer
+
+
+def calc_start_index( in_seq, start_index, window_size, span_gaps ):
+   
+    in_seq_len = len( in_seq )
+    kmer_length = ( in_seq_len - start_index ) - in_seq.count( '-', start_index )
+    probe_index = start_index
+
+    if ( in_seq_len - in_seq.count( '-', start_index ) ) - start_index < window_size:
+
+        while kmer_length < window_size and probe_index > 0:
+            probe_index -= 1
+
+            if span_gaps and in_seq[ probe_index ] != '-':
+                kmer_length += 1
+            else:
+                kmer_length += 1
+    return probe_index
+
 
 def get_kmers_from_seqs(            
                         names,
