@@ -245,7 +245,7 @@ def grab_xmer_from_seq( sequence, start, window_size, span_gaps ):
 
    probe_index = calc_start_index( sequence, start, window_size, span_gaps )
        
-   while xmer_len < window_size and probe_index <= sequence_len:
+   while xmer_len < window_size and probe_index < sequence_len:
 
         probe_char = sequence[ probe_index ]
         skipped = False
